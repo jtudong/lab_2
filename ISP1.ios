@@ -72,7 +72,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-! 
+!
 !
 !
 !
@@ -94,19 +94,18 @@ interface Ethernet0/0
 interface Ethernet0/1
  no shutdown
  description link to Corp Edge
- ip address 100.64.0.1 255.255.255.0
+ ip address 172.16.1.1 255.255.255.0
  duplex auto
 !
 interface Ethernet0/2
- no shutdown
- no ip address
+  no ip address
  shutdown
  duplex auto
 !
 interface Ethernet0/3
+ ip vrf forwarding management
+ ip address 172.31.255.2 255.255.255.0
  no shutdown
- no ip address
- shutdown
  duplex auto
 !
 router bgp 65001
