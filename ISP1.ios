@@ -1,0 +1,96 @@
+!
+! Last configuration change at 19:35:28 mst Mon Jan 31 2022
+! NVRAM config last updated at 19:35:36 mst Mon Jan 31 2022
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname ISP1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging buffered 32768
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+clock timezone mst -7 0
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip vrf management
+!
+!
+!
+!
+ip domain lookup source-interface Ethernet0/0
+ip domain name isp1.local
+ip name-server 208.67.222.222
+ip name-server 208.67.200.200
+ip name-server 4.2.2.2
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+username lab privilege 15 password 0 lab
+!
+!
+!
+!
+!
+ip domain lookup source-interface Ethernet0/0
+ip domain name isp1.local
+ip name-server 208.67.222.222
+ip name-server 208.67.200.200
+ip name-server 4.2.2.2
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+username lab privilege 15 password 0 lab
+!
