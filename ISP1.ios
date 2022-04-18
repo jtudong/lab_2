@@ -1,6 +1,6 @@
 !
 ! Last configuration change at 19:35:28 mst Mon Jan 31 2022
-! NVRAM config last updated at 19:35:36 mst Mon Jan 31 2022
+! NVRAM config last updated at 21:44:37 mst Sun Apr 17 2022
 !
 version 15.7
 service timestamps debug datetime msec
@@ -69,19 +69,10 @@ multilink bundle-name authenticated
 username cisco privilege 15 password 0 cisco
 username lab privilege 15 password 0 lab
 !
+redundancy
 !
 !
-!
-!
-ip domain lookup source-interface Ethernet0/0
-ip domain name isp1.local
-ip name-server 208.67.222.222
-ip name-server 208.67.200.200
-ip name-server 4.2.2.2
-ip cef
-no ipv6 cef
-!
-multilink bundle-name authenticated
+! 
 !
 !
 !
@@ -91,6 +82,71 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 password 0 cisco
-username lab privilege 15 password 0 lab
 !
+!
+!
+interface Ethernet0/0
+ no shutdown
+ description uplink to fgt-1 port 3
+ ip address 172.16.0.2 255.255.255.0
+ duplex auto
+!
+interface Ethernet0/1
+ no shutdown
+ description link to Corp Edge
+ ip address 100.64.0.1 255.255.255.0
+ duplex auto
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+ duplex auto
+!
+router bgp 65001
+ bgp router-id 172.16.0.2
+ bgp log-neighbor-changes
+ network 100.64.0.0 mask 255.255.255.0
+ neighbor 172.16.0.1 remote-as 65000
+ neighbor 172.16.0.1 soft-reconfiguration inbound
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 172.16.0.1 250
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+ntp server time1.google.com
+ntp server time3.google.com
+ntp server time2.google.com
+ntp server time4.google.com
+!
+end
+
