@@ -111,7 +111,7 @@ interface Ethernet0/3
 router bgp 65001
  bgp router-id 172.16.0.2
  bgp log-neighbor-changes
- network 100.64.0.0 mask 255.255.255.0
+ network 100.64.1.0 mask 255.255.255.0
  neighbor 172.16.0.1 remote-as 65000
  neighbor 172.16.0.1 soft-reconfiguration inbound
 !
