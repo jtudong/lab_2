@@ -12,41 +12,18 @@ hostname ISP1
 boot-start-marker
 boot-end-marker
 !
-!
 logging buffered 32768
 enable password cisco
 !
 no aaa new-model
 !
-!
-!
 clock timezone mst -7 0
-mmi polling-interval 60
-no mmi auto-configure
-no mmi pvc
-mmi snmp-timeout 180
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-
-
+! mmi polling-interval 60
+! no mmi auto-configure
+! no mmi pvc
+! mmi snmp-timeout 180
 !
 ip vrf management
-!
-!
-!
 !
 ip domain lookup source-interface Ethernet0/0
 ip domain name isp1.local
@@ -58,32 +35,11 @@ no ipv6 cef
 !
 multilink bundle-name authenticated
 !
-!
-!
-!
-!
-!
-!
-!
-!
 username cisco privilege 15 password 0 cisco
 username lab privilege 15 password 0 lab
+enable password cisco
 !
 redundancy
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 !
 interface Ethernet0/0
  no shutdown
@@ -121,26 +77,19 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 172.16.0.1 250
+ip route 100.64.1.0 255.255.255.0 Null0 name NAT_allocation_Corp
 !
 ipv6 ioam timestamp
-!
-!
-!
 control-plane
-!
-!
-!
-!
-!
-!
-!
 !
 line con 0
  logging synchronous
+ login local
+
 line aux 0
 line vty 0 4
- login
- transport input none
+ login local
+ transport preferred none
 !
 ntp server time1.google.com
 ntp server time3.google.com
