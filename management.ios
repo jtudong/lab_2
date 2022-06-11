@@ -1,0 +1,58 @@
+service config
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname management
+!
+logging buffered 32768
+enable password cisco
+!
+no aaa new-model
+!
+clock timezone MST -7 0
+
+interface Loopback0
+ ip address 1.1.1.1 255.255.255.255
+ ip domain lookup source-interface Ethernet0/0
+ip domain name isp1.local
+ip name-server 208.67.222.222
+ip name-server 208.67.200.200
+ip name-server 4.2.2.2
+username cisco privilege 15 password 0 cisco
+username lab privilege 15 password 0 lab
+enable password cisco
+!
+interface Ethernet0/0
+ no shutdown
+ no description
+ ip address dhcp
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+!
+interface Ethernet0/1
+ no shutdown
+ no description
+ ip address 172.31.255.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+!
+no ip http server
+no ip http secure-server
+line con 0
+ logging synchronous
+ login local
+
+line aux 0
+line vty 0 4
+ login local
+ transport preferred none
+!
+ntp server time1.google.com
+ntp server time3.google.com
+ntp server time2.google.com
+ntp server time4.google.com
+!
+end
