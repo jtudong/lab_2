@@ -95,7 +95,7 @@ interface Ethernet0/0
  duplex auto
 !
 interface Ethernet0/1
- ip address 172.31.255.1 255.255.255.0
+ ip address 172.31.255.100 255.255.255.0
  ip nat inside
  ip virtual-reassembly in
  duplex auto
