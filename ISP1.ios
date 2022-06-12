@@ -1,10 +1,10 @@
+Current configuration : 1930 bytes
 !
-! Last configuration change at 19:35:28 mst Mon Jan 31 2022
-! NVRAM config last updated at 21:44:37 mst Sun Apr 17 2022
+! Last configuration change at 17:53:35 mst Sat Jun 11 2022 by cisco
 !
 version 15.7
-service timestamps debug datetime msec
-service timestamps log datetime msec
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
 no service password-encryption
 !
 hostname ISP1
@@ -12,21 +12,44 @@ hostname ISP1
 boot-start-marker
 boot-end-marker
 !
+!
 logging buffered 32768
 enable password cisco
 !
 no aaa new-model
 !
+!
+!
 clock timezone mst -7 0
-! mmi polling-interval 60
-! no mmi auto-configure
-! no mmi pvc
-! mmi snmp-timeout 180
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
 !
 ip vrf management
 !
+!
+!
+!
 ip domain lookup source-interface Ethernet0/0
-ip domain name isp1.local
+ip domain name company.pri
 ip name-server 208.67.222.222
 ip name-server 208.67.200.200
 ip name-server 4.2.2.2
@@ -35,33 +58,51 @@ no ipv6 cef
 !
 multilink bundle-name authenticated
 !
+!
+!
+!
+!
+!
+!
+!
+!
 username cisco privilege 15 password 0 cisco
 username lab privilege 15 password 0 lab
-enable password cisco
 !
 redundancy
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface Ethernet0/0
- no shutdown
  description uplink to fgt-1 port 3
  ip address 172.16.0.2 255.255.255.0
  duplex auto
 !
 interface Ethernet0/1
- no shutdown
  description link to Corp Edge
  ip address 172.16.1.1 255.255.255.0
  duplex auto
 !
 interface Ethernet0/2
-  no ip address
+ no ip address
  shutdown
  duplex auto
 !
 interface Ethernet0/3
  ip vrf forwarding management
  ip address 172.31.255.2 255.255.255.0
- no shutdown
  duplex auto
 !
 router bgp 65001
@@ -76,20 +117,30 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 0.0.0.0 0.0.0.0 172.16.0.1 250
 ip route 100.64.1.0 255.255.255.0 Null0 name NAT_allocation_Corp
+ip ssh version 2
 !
 ipv6 ioam timestamp
+!
+!
+!
 control-plane
+!
+!
+!
+!
+!
+!
+!
 !
 line con 0
  logging synchronous
  login local
-
 line aux 0
 line vty 0 4
  login local
  transport preferred none
+ transport input ssh
 !
 ntp server time1.google.com
 ntp server time3.google.com
@@ -97,4 +148,3 @@ ntp server time2.google.com
 ntp server time4.google.com
 !
 end
-
