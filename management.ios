@@ -1,7 +1,7 @@
-Current configuration : 1864 bytes
+Current configuration : 1866 bytes
 !
-! Last configuration change at 10:58:45 MST Sat Jun 11 2022 by cisco
-! NVRAM config last updated at 10:58:48 MST Sat Jun 11 2022 by cisco
+! Last configuration change at 12:03:05 MST Sat Jun 11 2022 by cisco
+! NVRAM config last updated at 12:03:06 MST Sat Jun 11 2022 by cisco
 !
 version 15.7
 service config
@@ -95,7 +95,7 @@ interface Ethernet0/0
  duplex auto
 !
 interface Ethernet0/1
- ip address 172.31.255.1 255.255.255.0
+ ip address 172.31.255.100 255.255.255.0
  ip nat inside
  ip virtual-reassembly in
  duplex auto
