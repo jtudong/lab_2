@@ -1,6 +1,6 @@
-Current configuration : 2065 bytes
+Current configuration : 2119 bytes
 !
-! Last configuration change at 11:02:18 mst Sun Jun 12 2022
+! Last configuration change at 15:14:54 mst Sun Jun 12 2022
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -71,8 +71,9 @@ username lab privilege 15 password 0 lab
 !
 redundancy
 !
+lldp run
 !
-! 
+!
 !
 !
 !
@@ -86,42 +87,42 @@ redundancy
 !
 !
 interface Ethernet0/0
-description ISP1-client-feed
-no ip address
-duplex auto
-!         
+ description ISP1-client-feed
+ no ip address
+ duplex auto
+!
 interface Ethernet0/0.1
-encapsulation dot1Q 1 native
-ip address 172.16.1.2 255.255.255.252
+ encapsulation dot1Q 1 native
+ ip address 172.16.1.2 255.255.255.252
 !
 interface Ethernet0/1
-no ip address
-shutdown
-duplex auto
+ description corpFw1-e1-1
+ ip address 10.1.254.1 255.255.255.252
+ duplex auto
 !
 interface Ethernet0/2
-no ip address
-shutdown
-duplex auto
+ no ip address
+ shutdown
+ duplex auto
 !
 interface Ethernet0/3
-ip vrf forwarding management
-ip address 172.31.255.3 255.255.255.0
-duplex auto
+ ip vrf forwarding management
+ ip address 172.31.255.4 255.255.255.0
+ duplex auto
 !
 router bgp 65101
-bgp router-id 172.16.1.2
-bgp log-neighbor-changes
-network 100.64.1.0 mask 255.255.255.0
-neighbor 172.16.1.1 remote-as 65001
-neighbor 172.16.1.1 soft-reconfiguration inbound
+ bgp router-id 172.16.1.2
+ bgp log-neighbor-changes
+ network 100.64.1.0 mask 255.255.255.0
+ neighbor 172.16.1.1 remote-as 65001
+ neighbor 172.16.1.1 soft-reconfiguration inbound
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
-ip route 100.64.1.0 255.255.255.0 Null0 name NAT_allocation_Corp
+ip route 100.64.1.0 255.255.255.0 10.1.254.2 name NAT_allocation_Corp
 ip ssh version 2
 !
 ipv6 ioam timestamp
@@ -138,23 +139,23 @@ control-plane
 !
 !
 line con 0
-session-timeout 30
-exec-timeout 15 0
-privilege level 15
-logging synchronous
-transport preferred none
+ session-timeout 30
+ exec-timeout 15 0
+ privilege level 15
+ logging synchronous
+ transport preferred none
 line aux 0
-exec-timeout 0 0
-privilege level 15
-logging synchronous
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
 line vty 0 4
-exec-timeout 720 0
-logging synchronous
-login local
-transport preferred none
-transport input ssh
-transport output telnet ssh
-escape-character BREAK
+ exec-timeout 720 0
+ logging synchronous
+ login local
+ transport preferred none
+ transport input ssh
+ transport output telnet ssh
+ escape-character BREAK
 !
 !
 end
