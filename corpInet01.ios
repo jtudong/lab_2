@@ -1,6 +1,6 @@
-Current configuration : 2119 bytes
+Current configuration : 2210 bytes
 !
-! Last configuration change at 15:14:54 mst Sun Jun 12 2022
+! Last configuration change at 12:06:58 mst Sat Jun 18 2022 by cisco
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -98,6 +98,7 @@ interface Ethernet0/0.1
 interface Ethernet0/1
  description corpFw1-e1-1
  ip address 10.1.254.1 255.255.255.252
+ ip ospf 1 area 0
  duplex auto
 !
 interface Ethernet0/2
@@ -109,6 +110,9 @@ interface Ethernet0/3
  ip vrf forwarding management
  ip address 172.31.255.4 255.255.255.0
  duplex auto
+!
+router ospf 1
+ default-information originate always metric 10
 !
 router bgp 65101
  bgp router-id 172.16.1.2
