@@ -1,7 +1,7 @@
-Current configuration : 3586 bytes
+Current configuration : 3761 bytes
 !
-! Last configuration change at 09:46:54 mst Sun Jun 19 2022 by cisco
-! NVRAM config last updated at 10:03:15 mst Sun Jun 19 2022 by cisco
+! Last configuration change at 18:49:35 mst Mon Jun 20 2022 by cisco
+! NVRAM config last updated at 18:49:37 mst Mon Jun 20 2022 by cisco
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -108,7 +108,10 @@ interface Ethernet0/3
  switchport mode trunk
 !
 interface Ethernet1/0
- shutdown
+ description access2 e0/0
+ switchport trunk allowed vlan 5-4094
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
 !
 interface Ethernet1/1
 !
@@ -132,6 +135,7 @@ interface Vlan4
 interface Vlan5
  description Servers
  ip address 10.1.2.2 255.255.255.0
+ ip helper-address 10.1.2.10 
  ip ospf 1 area 0
  glbp 5 ip 10.1.2.1
  glbp 5 priority 110
@@ -140,6 +144,7 @@ interface Vlan5
 interface Vlan6
  description Users1
  ip address 10.1.3.2 255.255.255.0
+ ip helper-address 10.1.2.10 
  ip ospf 1 area 0
  glbp 6 ip 10.1.3.1
 !
