@@ -1,6 +1,6 @@
-Current configuration : 2060 bytes
+Current configuration : 2083 bytes
 !
-! Last configuration change at 09:54:19 mst Sun Jun 12 2022 by cisco
+! Last configuration change at 14:49:38 mst Sat Jun 25 2022
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -86,44 +86,45 @@ redundancy
 !
 !
 interface Ethernet0/0
-description uplink to fgt-1 port 3
-ip address 172.16.0.2 255.255.255.0
-duplex auto
+ description uplink to fgt-1 port 3
+ ip address 172.16.0.2 255.255.255.0
+ duplex auto
 !
 interface Ethernet0/1
-description Client feed
-no ip address
-duplex auto
+ description Client feed
+ no ip address
+ duplex auto
 !
 interface Ethernet0/1.1
-description Corp Edge corpInet01:e0-0
-encapsulation dot1Q 1 native
-ip address 172.16.1.1 255.255.255.252
+ description Corp Edge corpInet01:e0-0
+ encapsulation dot1Q 1 native
+ ip address 172.16.1.1 255.255.255.252
 !
 interface Ethernet0/2
-no ip address
-shutdown
-duplex auto
+ no ip address
+ shutdown
+ duplex auto
 !
 interface Ethernet0/3
-ip vrf forwarding management
-ip address 172.31.255.2 255.255.255.0
-duplex auto
+ ip vrf forwarding management
+ ip address 172.31.255.2 255.255.255.0
+ duplex auto
 !
 router bgp 65001
-bgp router-id 172.16.0.2
-bgp log-neighbor-changes
-network 172.16.1.0 mask 255.255.255.252
-neighbor 172.16.0.1 remote-as 65000
-neighbor 172.16.0.1 soft-reconfiguration inbound
-neighbor 172.16.1.2 remote-as 65101
-neighbor 172.16.1.2 soft-reconfiguration inbound
+ bgp router-id 172.16.0.2
+ bgp log-neighbor-changes
+ network 172.16.1.0 mask 255.255.255.252
+ neighbor 172.16.0.1 remote-as 65000
+ neighbor 172.16.0.1 soft-reconfiguration inbound
+ neighbor 172.16.1.2 remote-as 65101
+ neighbor 172.16.1.2 soft-reconfiguration inbound
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip ssh rsa keypair-name RSA_KEY
 ip ssh version 2
 !
 ipv6 ioam timestamp
@@ -140,13 +141,13 @@ control-plane
 !
 !
 line con 0
-logging synchronous
-login local
+ logging synchronous
+ login local
 line aux 0
 line vty 0 4
-login local
-transport preferred none
-transport input ssh
+ login local
+ transport preferred none
+ transport input ssh
 !
 ntp server time1.google.com
 ntp server time3.google.com
