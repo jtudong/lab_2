@@ -1,7 +1,6 @@
-Current configuration : 1866 bytes
+Current configuration : 1807 bytes
 !
-! Last configuration change at 12:03:05 MST Sat Jun 11 2022 by cisco
-! NVRAM config last updated at 21:12:44 MST Mon Jun 13 2022 by cisco
+! Last configuration change at 13:36:55 MST Sat Jun 25 2022
 !
 version 15.7
 service config
@@ -16,6 +15,7 @@ boot-end-marker
 !
 !
 logging buffered 32768
+no logging console
 enable password cisco
 !
 no aaa new-model
@@ -72,7 +72,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-!
+! 
 !
 !
 !
@@ -141,11 +141,11 @@ line vty 0 4
  transport preferred none
  transport input telnet ssh
 !
-ntp server time1.google.com
 ntp server time3.google.com
+ntp server time1.google.com
+ntp server 34.202.215.187
 ntp server time2.google.com
 ntp server time4.google.com
-ntp server 34.208.249.133
 ntp server pool.ntp.org
 !
 end

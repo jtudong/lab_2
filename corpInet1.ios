@@ -1,13 +1,13 @@
-Current configuration : 2210 bytes
+Current configuration : 2312 bytes
 !
-! Last configuration change at 12:06:58 mst Sat Jun 18 2022 by cisco
+! Last configuration change at 15:03:04 mst Sat Jun 25 2022
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
 service timestamps log datetime msec localtime show-timezone
 no service password-encryption
 !
-hostname corpInet01
+hostname corpInet1
 !
 boot-start-marker
 boot-end-marker
@@ -73,7 +73,7 @@ redundancy
 !
 lldp run
 !
-!
+! 
 !
 !
 !
@@ -143,7 +143,7 @@ control-plane
 !
 !
 line con 0
- session-timeout 30
+ session-timeout 30 
  exec-timeout 15 0
  privilege level 15
  logging synchronous
@@ -161,5 +161,9 @@ line vty 0 4
  transport output telnet ssh
  escape-character BREAK
 !
+ntp server time1.google.com
+ntp server time3.google.com
+ntp server time2.google.com
+ntp server time4.google.com
 !
 end
