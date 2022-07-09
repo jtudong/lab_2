@@ -1,6 +1,7 @@
-Current configuration : 2061 bytes
+Current configuration : 2261 bytes
 !
-! Last configuration change at 15:32:17 mst Sat Jun 25 2022
+! Last configuration change at 09:15:39 mst Sat Jul 9 2022 by cisco
+! NVRAM config last updated at 09:15:40 mst Sat Jul 9 2022 by cisco
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -48,7 +49,7 @@ vlan 4
  name security
 lldp run
 !
-! 
+!
 !
 !
 !
@@ -103,12 +104,16 @@ ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 !
 !
 !
+snmp-server community company.read RO
+snmp-server location Corp
+snmp-server chassis-id wanEdgeS1
+snmp ifmib ifindex persist
 !
 control-plane
 !
 !
 line con 0
- session-timeout 30 
+ session-timeout 30
  exec-timeout 15 0
  privilege level 15
  logging synchronous
