@@ -1,6 +1,7 @@
-Current configuration : 2312 bytes
+Current configuration : 2513 bytes
 !
-! Last configuration change at 15:03:04 mst Sat Jun 25 2022
+! Last configuration change at 21:39:30 mst Fri Jul 8 2022 by cisco
+! NVRAM config last updated at 21:39:31 mst Fri Jul 8 2022 by cisco
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -73,7 +74,7 @@ redundancy
 !
 lldp run
 !
-! 
+!
 !
 !
 !
@@ -131,6 +132,10 @@ ip ssh version 2
 !
 ipv6 ioam timestamp
 !
+snmp-server community company.read RO
+snmp-server ifindex persist
+snmp-server location Corp
+snmp-server chassis-id corpInet1
 !
 !
 control-plane
@@ -143,7 +148,7 @@ control-plane
 !
 !
 line con 0
- session-timeout 30 
+ session-timeout 30
  exec-timeout 15 0
  privilege level 15
  logging synchronous

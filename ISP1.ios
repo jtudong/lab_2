@@ -1,6 +1,7 @@
-Current configuration : 2083 bytes
+Current configuration : 2279 bytes
 !
-! Last configuration change at 14:49:38 mst Sat Jun 25 2022
+! Last configuration change at 22:31:26 mst Fri Jul 8 2022 by cisco
+! NVRAM config last updated at 22:31:27 mst Fri Jul 8 2022 by cisco
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -72,7 +73,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-! 
+!
 !
 !
 !
@@ -129,6 +130,10 @@ ip ssh version 2
 !
 ipv6 ioam timestamp
 !
+snmp-server community company.read RO
+snmp-server ifindex persist
+snmp-server location Corp
+snmp-server chassis-id ISP1
 !
 !
 control-plane
