@@ -10,6 +10,14 @@
           </role-based>
         </permissions>
       </entry>
+      <entry name="jtadmin">
+        <permissions>
+          <role-based>
+            <superuser>yes</superuser>
+          </role-based>
+        </permissions>
+        <authentication-profile>ldap</authentication-profile>
+      </entry>
     </users>
     <password-complexity>
       <enabled>yes</enabled>
@@ -72,6 +80,206 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
+    <content-preview>
+      <application>
+        <entry id="10866" minver="8.1.0" name="dns-non-rfc" ori_country="USA" ori_language="English">
+          <category>networking</category>
+          <subcategory>infrastructure</subcategory>
+          <technology>network-protocol</technology>
+          <description>The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain. This App-ID detects non-rfc compliant dns traffic.</description>
+          <alg>yes</alg>
+          <appident>yes</appident>
+          <vulnerability-ident>yes</vulnerability-ident>
+          <evasive-behavior>no</evasive-behavior>
+          <consume-big-bandwidth>no</consume-big-bandwidth>
+          <used-by-malware>yes</used-by-malware>
+          <able-to-transfer-file>no</able-to-transfer-file>
+          <has-known-vulnerability>yes</has-known-vulnerability>
+          <tunnel-other-application>no</tunnel-other-application>
+          <prone-to-misuse>no</prone-to-misuse>
+          <pervasive-use>yes</pervasive-use>
+          <per-direction-regex>no</per-direction-regex>
+          <decode>dns</decode>
+          <deny-action>drop-reset</deny-action>
+          <cachable>yes</cachable>
+          <new-appid>yes</new-appid>
+          <tag minver="9.1.0">
+            <member>[Non-RFC Compliant]</member>
+          </tag>
+          <references>
+            <entry name="Wikipedia">
+              <link>http://en.wikipedia.org/wiki/Domain_name_system</link>
+            </entry>
+          </references>
+          <default>
+            <port>
+              <member>tcp/53</member>
+              <member>udp/53,5353</member>
+            </port>
+          </default>
+          <risk>3</risk>
+          <preview>yes</preview>
+        </entry>
+        <entry id="42" name="dns-base" ori_country="USA" ori_language="English">
+          <ottawa-name>dns</ottawa-name>
+          <category>networking</category>
+          <subcategory>infrastructure</subcategory>
+          <technology>network-protocol</technology>
+          <description>The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain.</description>
+          <alg>yes</alg>
+          <appident>yes</appident>
+          <ident-by-sport>yes</ident-by-sport>
+          <ident-by-dport>yes</ident-by-dport>
+          <vulnerability-ident>yes</vulnerability-ident>
+          <evasive-behavior>no</evasive-behavior>
+          <consume-big-bandwidth>no</consume-big-bandwidth>
+          <used-by-malware>yes</used-by-malware>
+          <able-to-transfer-file>no</able-to-transfer-file>
+          <has-known-vulnerability>yes</has-known-vulnerability>
+          <tunnel-other-application>no</tunnel-other-application>
+          <prone-to-misuse>no</prone-to-misuse>
+          <pervasive-use>yes</pervasive-use>
+          <per-direction-regex>no</per-direction-regex>
+          <decode>dns</decode>
+          <preemptive>yes</preemptive>
+          <cachable>yes</cachable>
+          <references>
+            <entry name="Wikipedia">
+              <link>http://en.wikipedia.org/wiki/Domain_name_system</link>
+            </entry>
+          </references>
+          <default>
+            <port>
+              <member>udp/53,5353</member>
+              <member>tcp/53</member>
+            </port>
+            <extended-port>
+              <member>tcp/853/secure</member>
+              <member>tcp/53</member>
+              <member>udp/53,5353</member>
+            </extended-port>
+          </default>
+          <tunnel-applications>
+            <member>tcp-over-dns</member>
+          </tunnel-applications>
+          <risk>3</risk>
+          <application-container>dns</application-container>
+          <preview>yes</preview>
+        </entry>
+        <entry id="10867" minver="8.1.0" name="eli-link" ori_country="USA" ori_language="English">
+          <category>business-systems</category>
+          <subcategory>medical</subcategory>
+          <technology>client-server</technology>
+          <description>ELI Link is a Microsoft Windows service that acts as a data exchange gateway for Welch Allyn's line of ELI electrocardiographs. This App-ID covers the communication between ELI electrocardiographs and ELI Link.</description>
+          <appident>yes</appident>
+          <evasive-behavior>no</evasive-behavior>
+          <consume-big-bandwidth>no</consume-big-bandwidth>
+          <used-by-malware>no</used-by-malware>
+          <able-to-transfer-file>no</able-to-transfer-file>
+          <has-known-vulnerability>no</has-known-vulnerability>
+          <tunnel-other-application>no</tunnel-other-application>
+          <prone-to-misuse>no</prone-to-misuse>
+          <pervasive-use>no</pervasive-use>
+          <per-direction-regex>no</per-direction-regex>
+          <deny-action>drop-reset</deny-action>
+          <cachable>no</cachable>
+          <new-appid>yes</new-appid>
+          <references>
+            <entry name="ELI Link Admin Manual">
+              <link>https://www.hillrom.com/content/dam/hillrom-aem/us/en/sap-documents/LIT/9515-/9515-166-50-ENGLITPDF.pdf</link>
+            </entry>
+          </references>
+          <default>
+            <port>
+              <member>tcp/5101</member>
+            </port>
+          </default>
+          <risk>1</risk>
+          <preview>yes</preview>
+        </entry>
+        <entry id="10901" minver="8.1.0" name="rockwell-factorytalk-viewpoint" ori_country="USA" ori_language="English">
+          <category>business-systems</category>
+          <subcategory>ics-protocols</subcategory>
+          <technology>browser-based</technology>
+          <description>FactoryTalk&amp;#xAE; ViewPoint provides a secure interface with HMI applications through a web browser. FactoryTalk&amp;#xAE; ViewPoint enables users to deliver alarm and production data to engineering, create dashboards with high-level summary information for plant management, or do their jobs when they step away from a machine. This App-ID covers the communication between FactoryTalk&amp;#xAE; ViewPoint and an HMI device.</description>
+          <appident>yes</appident>
+          <vulnerability-ident>yes</vulnerability-ident>
+          <evasive-behavior>no</evasive-behavior>
+          <consume-big-bandwidth>no</consume-big-bandwidth>
+          <used-by-malware>no</used-by-malware>
+          <able-to-transfer-file>no</able-to-transfer-file>
+          <has-known-vulnerability>yes</has-known-vulnerability>
+          <tunnel-other-application>no</tunnel-other-application>
+          <prone-to-misuse>no</prone-to-misuse>
+          <pervasive-use>no</pervasive-use>
+          <per-direction-regex>no</per-direction-regex>
+          <deny-action>drop-reset</deny-action>
+          <cachable>no</cachable>
+          <can-disable>yes</can-disable>
+          <new-appid>yes</new-appid>
+          <tag minver="9.1.0">
+            <member>[Web App]</member>
+          </tag>
+          <references>
+            <entry name="FactoryTalk ViewPoint">
+              <link>https://www.rockwellautomation.com/en-us/products/software/factorytalk/operationsuite/view/factorytalk-viewpoint.html</link>
+            </entry>
+          </references>
+          <default>
+            <port>
+              <member>tcp/80,443</member>
+            </port>
+          </default>
+          <use-applications>
+            <member>web-browsing</member>
+          </use-applications>
+          <implicit-use-applications>
+            <member>web-browsing</member>
+          </implicit-use-applications>
+          <risk>1</risk>
+          <parent-app>web20_parrent_app</parent-app>
+          <preview>yes</preview>
+        </entry>
+      </application>
+      <application-type>
+        <category/>
+        <technology/>
+      </application-type>
+    </content-preview>
+    <server-profile>
+      <ldap>
+        <entry name="company-AD">
+          <server>
+            <entry name="dc1">
+              <address>dc1.company.pri</address>
+              <port>389</port>
+            </entry>
+          </server>
+          <bind-dn>svc-palo</bind-dn>
+          <bind-password>-AQ==qGnQpjwEGIqumouMeWzkixYWwmg=L2I2sLYt3BZLpJQwd56Usg==</bind-password>
+          <ssl>no</ssl>
+          <base>DC=company,DC=pri</base>
+        </entry>
+      </ldap>
+    </server-profile>
+    <authentication-profile>
+      <entry name="ldap">
+        <method>
+          <ldap>
+            <server-profile>company-AD</server-profile>
+            <login-attribute>sAMAccountName</login-attribute>
+          </ldap>
+        </method>
+        <multi-factor-auth>
+          <mfa-enable>no</mfa-enable>
+        </multi-factor-auth>
+        <allow-list>
+          <member>all</member>
+        </allow-list>
+        <user-domain>company.pri</user-domain>
+      </entry>
+    </authentication-profile>
+    <authentication-sequence/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
@@ -416,10 +624,56 @@
           <default-gateway>172.31.255.100</default-gateway>
           <dns-setting>
             <servers>
-              <primary>208.67.222.222</primary>
-              <secondary>4.2.2.1</secondary>
+              <primary>10.1.2.10</primary>
             </servers>
           </dns-setting>
+          <route>
+            <service>
+              <entry name="dns">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="ldap">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="netflow">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="panorama">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="snmp">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="syslog">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="tacplus">
+                <source>
+                  <address>10.1.1.4/24</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+            </service>
+          </route>
+          <domain>company.pri</domain>
         </system>
         <setting>
           <config>
