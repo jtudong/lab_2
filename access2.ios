@@ -1,7 +1,6 @@
-Current configuration : 2651 bytes
+Current configuration : 2575 bytes
 !
-! Last configuration change at 09:52:47 mst Sat Jul 9 2022 by cisco
-! NVRAM config last updated at 09:52:48 mst Sat Jul 9 2022 by cisco
+! Last configuration change at 19:51:30 mst Mon Jul 11 2022
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone

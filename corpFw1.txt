@@ -10,8 +10,22 @@ set deviceconfig system hostname corpFw1
 set deviceconfig system ip-address 172.31.255.9
 set deviceconfig system netmask 255.255.255.0
 set deviceconfig system default-gateway 172.31.255.100
-set deviceconfig system dns-setting servers primary 208.67.222.222
-set deviceconfig system dns-setting servers secondary 4.2.2.1
+set deviceconfig system dns-setting servers primary 10.1.2.10
+set deviceconfig system route service dns source address 10.1.1.4/24
+set deviceconfig system route service dns source interface ethernet1/2
+set deviceconfig system route service ldap source address 10.1.1.4/24
+set deviceconfig system route service ldap source interface ethernet1/2
+set deviceconfig system route service netflow source address 10.1.1.4/24
+set deviceconfig system route service netflow source interface ethernet1/2
+set deviceconfig system route service panorama source address 10.1.1.4/24
+set deviceconfig system route service panorama source interface ethernet1/2
+set deviceconfig system route service snmp source address 10.1.1.4/24
+set deviceconfig system route service snmp source interface ethernet1/2
+set deviceconfig system route service syslog source address 10.1.1.4/24
+set deviceconfig system route service syslog source interface ethernet1/2
+set deviceconfig system route service tacplus source address 10.1.1.4/24
+set deviceconfig system route service tacplus source interface ethernet1/2
+set deviceconfig system domain company.pri
 set deviceconfig setting config rematch yes
 set deviceconfig setting management hostname-type-in-syslog FQDN
 set deviceconfig setting auto-mac-detect yes
@@ -30,7 +44,7 @@ set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-n
 set network interface ethernet ethernet1/2 layer3 sdwan-link-settings enable no
 set network interface ethernet ethernet1/2 layer3 lldp enable yes
 set network interface ethernet ethernet1/2 layer3 lldp profile default
-set network interface ethernet ethernet1/2 layer3 ip 10.1.1.4
+set network interface ethernet ethernet1/2 layer3 ip 10.1.1.4/24
 set network interface ethernet ethernet1/2 layer3 interface-management-profile https-ssh-ping-snmp
 set network profiles monitor-profile default interval 3
 set network profiles monitor-profile default threshold 5
@@ -87,19 +101,35 @@ set network virtual-router default protocol bgp dampening-profile default decay-
 set network virtual-router default protocol bgp dampening-profile default enable yes
 set network virtual-router default protocol bgp routing-options graceful-restart enable yes
 set network virtual-router default protocol rip enable no
-set network virtual-router default protocol ospf enable no
+set network virtual-router default protocol ospf enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 type normal
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 passive no
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 gr-delay 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 metric 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 priority 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 hello-interval 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 dead-counts 4
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 retransmit-interval 5
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 transit-delay 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 link-type broadcast
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 passive no
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 gr-delay 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 metric 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 priority 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 hello-interval 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 dead-counts 4
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 retransmit-interval 5
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 transit-delay 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 link-type broadcast
+set network virtual-router default protocol ospf router-id 10.1.1.4
+set network virtual-router default protocol ospf reject-default-route no
 set network virtual-router default protocol ospfv3 enable no
 set network virtual-router default interface [ ethernet1/1 ethernet1/2 ]
 set network virtual-router default ecmp algorithm ip-modulo
-set network virtual-router default routing-table ip static-route default_route path-monitor enable no
-set network virtual-router default routing-table ip static-route default_route path-monitor failure-condition any
-set network virtual-router default routing-table ip static-route default_route path-monitor hold-time 2
-set network virtual-router default routing-table ip static-route default_route nexthop ip-address corpInet01-e0-1
-set network virtual-router default routing-table ip static-route default_route bfd profile None
-set network virtual-router default routing-table ip static-route default_route interface ethernet1/1
-set network virtual-router default routing-table ip static-route default_route metric 10
-set network virtual-router default routing-table ip static-route default_route destination 0.0.0.0/0
-set network virtual-router default routing-table ip static-route default_route route-table unicast
 set network lldp enable yes
 set shared application
 set shared application-group
@@ -126,6 +156,122 @@ set shared botnet configuration unknown-applications unknown-udp session-length 
 set shared botnet configuration unknown-applications unknown-udp session-length minimum-bytes 50
 set shared botnet report topn 100
 set shared botnet report scheduled yes
+set shared content-preview application dns-non-rfc category networking
+set shared content-preview application dns-non-rfc subcategory infrastructure
+set shared content-preview application dns-non-rfc technology network-protocol
+set shared content-preview application dns-non-rfc description 'The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain. This App-ID detects non-rfc compliant dns traffic.'
+set shared content-preview application dns-non-rfc alg yes
+set shared content-preview application dns-non-rfc appident yes
+set shared content-preview application dns-non-rfc vulnerability-ident yes
+set shared content-preview application dns-non-rfc evasive-behavior no
+set shared content-preview application dns-non-rfc consume-big-bandwidth no
+set shared content-preview application dns-non-rfc used-by-malware yes
+set shared content-preview application dns-non-rfc able-to-transfer-file no
+set shared content-preview application dns-non-rfc has-known-vulnerability yes
+set shared content-preview application dns-non-rfc tunnel-other-application no
+set shared content-preview application dns-non-rfc prone-to-misuse no
+set shared content-preview application dns-non-rfc pervasive-use yes
+set shared content-preview application dns-non-rfc per-direction-regex no
+set shared content-preview application dns-non-rfc decode dns
+set shared content-preview application dns-non-rfc deny-action drop-reset
+set shared content-preview application dns-non-rfc cachable yes
+set shared content-preview application dns-non-rfc new-appid yes
+set shared content-preview application dns-non-rfc tag "[Non-RFC Compliant]"
+set shared content-preview application dns-non-rfc references Wikipedia link http://en.wikipedia.org/wiki/Domain_name_system
+set shared content-preview application dns-non-rfc default port [ tcp/53 udp/53,5353 ]
+set shared content-preview application dns-non-rfc risk 3
+set shared content-preview application dns-non-rfc preview yes
+set shared content-preview application dns-base ottawa-name dns
+set shared content-preview application dns-base category networking
+set shared content-preview application dns-base subcategory infrastructure
+set shared content-preview application dns-base technology network-protocol
+set shared content-preview application dns-base description 'The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain.'
+set shared content-preview application dns-base alg yes
+set shared content-preview application dns-base appident yes
+set shared content-preview application dns-base ident-by-sport yes
+set shared content-preview application dns-base ident-by-dport yes
+set shared content-preview application dns-base vulnerability-ident yes
+set shared content-preview application dns-base evasive-behavior no
+set shared content-preview application dns-base consume-big-bandwidth no
+set shared content-preview application dns-base used-by-malware yes
+set shared content-preview application dns-base able-to-transfer-file no
+set shared content-preview application dns-base has-known-vulnerability yes
+set shared content-preview application dns-base tunnel-other-application no
+set shared content-preview application dns-base prone-to-misuse no
+set shared content-preview application dns-base pervasive-use yes
+set shared content-preview application dns-base per-direction-regex no
+set shared content-preview application dns-base decode dns
+set shared content-preview application dns-base preemptive yes
+set shared content-preview application dns-base cachable yes
+set shared content-preview application dns-base references Wikipedia link http://en.wikipedia.org/wiki/Domain_name_system
+set shared content-preview application dns-base default port [ udp/53,5353 tcp/53 ]
+set shared content-preview application dns-base default extended-port [ tcp/853/secure tcp/53 udp/53,5353 ]
+set shared content-preview application dns-base tunnel-applications tcp-over-dns
+set shared content-preview application dns-base risk 3
+set shared content-preview application dns-base application-container dns
+set shared content-preview application dns-base preview yes
+set shared content-preview application eli-link category business-systems
+set shared content-preview application eli-link subcategory medical
+set shared content-preview application eli-link technology client-server
+set shared content-preview application eli-link description "ELI Link is a Microsoft Windows service that acts as a data exchange gateway for Welch Allyn's line of ELI electrocardiographs. This App-ID covers the communication between ELI electrocardiographs and ELI Link."
+set shared content-preview application eli-link appident yes
+set shared content-preview application eli-link evasive-behavior no
+set shared content-preview application eli-link consume-big-bandwidth no
+set shared content-preview application eli-link used-by-malware no
+set shared content-preview application eli-link able-to-transfer-file no
+set shared content-preview application eli-link has-known-vulnerability no
+set shared content-preview application eli-link tunnel-other-application no
+set shared content-preview application eli-link prone-to-misuse no
+set shared content-preview application eli-link pervasive-use no
+set shared content-preview application eli-link per-direction-regex no
+set shared content-preview application eli-link deny-action drop-reset
+set shared content-preview application eli-link cachable no
+set shared content-preview application eli-link new-appid yes
+set shared content-preview application eli-link references "ELI Link Admin Manual" link https://www.hillrom.com/content/dam/hillrom-aem/us/en/sap-documents/LIT/9515-/9515-166-50-ENGLITPDF.pdf
+set shared content-preview application eli-link default port tcp/5101
+set shared content-preview application eli-link risk 1
+set shared content-preview application eli-link preview yes
+set shared content-preview application rockwell-factorytalk-viewpoint category business-systems
+set shared content-preview application rockwell-factorytalk-viewpoint subcategory ics-protocols
+set shared content-preview application rockwell-factorytalk-viewpoint technology browser-based
+set shared content-preview application rockwell-factorytalk-viewpoint description "FactoryTalk&#xAE; ViewPoint provides a secure interface with HMI applications through a web browser. FactoryTalk&#xAE; ViewPoint enables users to deliver alarm and production data to engineering, create dashboards with high-level summary information for plant management, or do their jobs when they step away from a machine. This App-ID covers the communication between FactoryTalk&#xAE; ViewPoint and an HMI device."
+set shared content-preview application rockwell-factorytalk-viewpoint appident yes
+set shared content-preview application rockwell-factorytalk-viewpoint vulnerability-ident yes
+set shared content-preview application rockwell-factorytalk-viewpoint evasive-behavior no
+set shared content-preview application rockwell-factorytalk-viewpoint consume-big-bandwidth no
+set shared content-preview application rockwell-factorytalk-viewpoint used-by-malware no
+set shared content-preview application rockwell-factorytalk-viewpoint able-to-transfer-file no
+set shared content-preview application rockwell-factorytalk-viewpoint has-known-vulnerability yes
+set shared content-preview application rockwell-factorytalk-viewpoint tunnel-other-application no
+set shared content-preview application rockwell-factorytalk-viewpoint prone-to-misuse no
+set shared content-preview application rockwell-factorytalk-viewpoint pervasive-use no
+set shared content-preview application rockwell-factorytalk-viewpoint per-direction-regex no
+set shared content-preview application rockwell-factorytalk-viewpoint deny-action drop-reset
+set shared content-preview application rockwell-factorytalk-viewpoint cachable no
+set shared content-preview application rockwell-factorytalk-viewpoint can-disable yes
+set shared content-preview application rockwell-factorytalk-viewpoint new-appid yes
+set shared content-preview application rockwell-factorytalk-viewpoint tag "[Web App]"
+set shared content-preview application rockwell-factorytalk-viewpoint references "FactoryTalk ViewPoint" link https://www.rockwellautomation.com/en-us/products/software/factorytalk/operationsuite/view/factorytalk-viewpoint.html
+set shared content-preview application rockwell-factorytalk-viewpoint default port tcp/80,443
+set shared content-preview application rockwell-factorytalk-viewpoint use-applications web-browsing
+set shared content-preview application rockwell-factorytalk-viewpoint implicit-use-applications web-browsing
+set shared content-preview application rockwell-factorytalk-viewpoint risk 1
+set shared content-preview application rockwell-factorytalk-viewpoint parent-app web20_parrent_app
+set shared content-preview application rockwell-factorytalk-viewpoint preview yes
+set shared content-preview application-type category
+set shared content-preview application-type technology
+set shared server-profile ldap company-AD server dc1 address dc1.company.pri
+set shared server-profile ldap company-AD server dc1 port 389
+set shared server-profile ldap company-AD bind-dn svc-palo
+set shared server-profile ldap company-AD bind-password -AQ==qGnQpjwEGIqumouMeWzkixYWwmg=L2I2sLYt3BZLpJQwd56Usg==
+set shared server-profile ldap company-AD ssl no
+set shared server-profile ldap company-AD base DC=company,DC=pri
+set shared authentication-profile ldap method ldap server-profile company-AD
+set shared authentication-profile ldap method ldap login-attribute sAMAccountName
+set shared authentication-profile ldap multi-factor-auth mfa-enable no
+set shared authentication-profile ldap allow-list all
+set shared authentication-profile ldap user-domain company.pri
+set shared authentication-sequence
 set zone outside network layer3 ethernet1/1
 set zone inside network layer3 ethernet1/2
 set service-group
@@ -148,14 +294,38 @@ set rulebase nat rules "PAT for security subnet" from inside
 set rulebase nat rules "PAT for security subnet" source vlan-4-security
 set rulebase nat rules "PAT for security subnet" destination any
 set rulebase nat rules "PAT for security subnet" service any
+set rulebase nat rules "PAT for servers" source-translation dynamic-ip-and-port translated-address 100.64.1.2
+set rulebase nat rules "PAT for servers" to outside
+set rulebase nat rules "PAT for servers" from inside
+set rulebase nat rules "PAT for servers" source nat-group-servers
+set rulebase nat rules "PAT for servers" destination any
+set rulebase nat rules "PAT for servers" service any
+set rulebase nat rules "PAT for users" source-translation dynamic-ip-and-port translated-address 100.64.1.3
+set rulebase nat rules "PAT for users" to outside
+set rulebase nat rules "PAT for users" from inside
+set rulebase nat rules "PAT for users" source nat-group-users
+set rulebase nat rules "PAT for users" destination any
+set rulebase nat rules "PAT for users" service any
+set rulebase nat rules "PAT for management" source-translation dynamic-ip-and-port translated-address 100.64.1.4
+set rulebase nat rules "PAT for management" to outside
+set rulebase nat rules "PAT for management" from inside
+set rulebase nat rules "PAT for management" source vlan-7-management
+set rulebase nat rules "PAT for management" destination any
+set rulebase nat rules "PAT for management" service any
 set import network interface [ ethernet1/1 ethernet1/2 ]
 set application-group
 set application
+set address-group nat-group-servers static vlan-5-servers
+set address-group nat-group-users static vlan-6-users1
 set address corpInet01-e0-1 ip-netmask 10.1.254.1/32
 set address vlan-4-security ip-netmask 10.1.1.0/24
 set address vlan-4-security description "security devices"
+set address vlan-5-servers ip-netmask 10.1.2.0/24
+set address vlan-6-users1 ip-netmask 10.1.3.0/24
+set address vlan-7-management ip-netmask 10.1.4.0/24
 set mgt-config users admin phash $5$psylnikx$H8dkxp1qG1josIaQjFf1zXngrSCRxPcATLlEz6cB2k1
 set mgt-config users admin permissions role-based superuser yes
+set mgt-config users jtadmin permissions role-based superuser yes
+set mgt-config users jtadmin authentication-profile ldap
 set mgt-config password-complexity enabled yes
 set mgt-config password-complexity minimum-length 8
-[edit]
