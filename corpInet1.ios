@@ -1,7 +1,6 @@
-Current configuration : 2513 bytes
+Current configuration : 2422 bytes
 !
-! Last configuration change at 21:39:30 mst Fri Jul 8 2022 by cisco
-! NVRAM config last updated at 21:39:31 mst Fri Jul 8 2022 by cisco
+! No configuration change since last restart
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -168,7 +167,7 @@ line vty 0 4
 !
 ntp server time1.google.com
 ntp server time3.google.com
-ntp server time2.google.com
 ntp server time4.google.com
+ntp server time2.google.com
 !
 end

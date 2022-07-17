@@ -1,6 +1,6 @@
-Current configuration : 1807 bytes
+Current configuration : 1803 bytes
 !
-! Last configuration change at 13:36:55 MST Sat Jun 25 2022
+! No configuration change since last restart
 !
 version 15.7
 service config
@@ -72,7 +72,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-! 
+!
 !
 !
 !
@@ -143,9 +143,9 @@ line vty 0 4
 !
 ntp server time3.google.com
 ntp server time1.google.com
-ntp server 34.202.215.187
+ntp server 34.202.215.187 minpoll 10
+ntp server pool.ntp.org
 ntp server time2.google.com
 ntp server time4.google.com
-ntp server pool.ntp.org
 !
 end
