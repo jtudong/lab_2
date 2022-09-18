@@ -10,10 +10,18 @@
           </role-based>
         </permissions>
       </entry>
+      <entry name="lab">
+        <permissions>
+          <role-based>
+            <superreader>yes</superreader>
+          </role-based>
+        </permissions>
+        <phash>$5$xkkpisgh$9rEx503yw2h22PQTXlR61CPq0ohVP.S1CXbmCFn1b5B</phash>
+      </entry>
     </users>
     <password-complexity>
       <enabled>yes</enabled>
-      <minimum-length>8</minimum-length>
+      <minimum-length>3</minimum-length>
     </password-complexity>
   </mgt-config>
   <shared>
@@ -72,6 +80,7 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
+    <content-preview/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
@@ -502,13 +511,28 @@
           <update-schedule>
             <threats>
               <recurring>
-                <weekly>
-                  <day-of-week>wednesday</day-of-week>
-                  <at>01:02</at>
-                  <action>download-only</action>
-                </weekly>
+                <every-30-mins>
+                  <at>3</at>
+                  <action>download-and-install</action>
+                </every-30-mins>
               </recurring>
             </threats>
+            <wildfire>
+              <recurring>
+                <every-15-mins>
+                  <at>0</at>
+                  <action>download-and-install</action>
+                </every-15-mins>
+              </recurring>
+            </wildfire>
+            <anti-virus>
+              <recurring>
+                <hourly>
+                  <at>20</at>
+                  <action>download-and-install</action>
+                </hourly>
+              </recurring>
+            </anti-virus>
           </update-schedule>
           <timezone>America/Phoenix</timezone>
           <service>
@@ -521,16 +545,49 @@
           <default-gateway>172.31.255.100</default-gateway>
           <dns-setting>
             <servers>
-              <primary>208.67.222.222</primary>
-              <secondary>4.2.2.1</secondary>
+              <primary>10.1.2.10</primary>
+              <secondary>208.67.222.222</secondary>
             </servers>
           </dns-setting>
           <device-telemetry>
-            <device-health-performance>yes</device-health-performance>
-            <product-usage>yes</product-usage>
-            <threat-prevention>yes</threat-prevention>
+            <device-health-performance>no</device-health-performance>
+            <product-usage>no</product-usage>
+            <threat-prevention>no</threat-prevention>
             <region>Americas</region>
           </device-telemetry>
+          <motd-and-banner>
+            <banner-header>PA-FW1</banner-header>
+            <banner-header-color>color14</banner-header-color>
+            <banner-header-text-color>color4</banner-header-text-color>
+            <banner-header-footer-match>no</banner-header-footer-match>
+          </motd-and-banner>
+          <ntp-servers>
+            <primary-ntp-server>
+              <ntp-server-address>time1.google.com</ntp-server-address>
+              <authentication-type>
+                <none/>
+              </authentication-type>
+            </primary-ntp-server>
+            <secondary-ntp-server>
+              <ntp-server-address>time2.google.com</ntp-server-address>
+              <authentication-type>
+                <none/>
+              </authentication-type>
+            </secondary-ntp-server>
+          </ntp-servers>
+          <domain>company.pri</domain>
+          <snmp-setting>
+            <access-setting>
+              <version>
+                <v2c>
+                  <snmp-community-string>company.read</snmp-community-string>
+                </v2c>
+              </version>
+            </access-setting>
+            <snmp-system>
+              <location>lab2</location>
+            </snmp-system>
+          </snmp-setting>
         </system>
         <setting>
           <config>
@@ -568,7 +625,7 @@
           <rulebase>
             <nat>
               <rules>
-                <entry name="public access" uuid="4c50b181-fe0e-4262-b306-a8db54da3626">
+                <entry name="public access" uuid="c31d61b1-a49c-40aa-b44a-ffb2f7c3ece5">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <interface-address>
@@ -596,7 +653,7 @@
             </nat>
             <security>
               <rules>
-                <entry name="permit all internet" uuid="5853bd65-f2b4-4ca3-b206-e669a659fe28">
+                <entry name="permit all internet" uuid="5e64c791-e07b-4875-9ebe-a838306ac843">
                   <to>
                     <member>outside</member>
                   </to>
@@ -629,7 +686,7 @@
                   </destination-hip>
                   <action>allow</action>
                 </entry>
-                <entry name="permit firewall management" uuid="a77ee41e-f5a7-420f-913f-ede20c18713b">
+                <entry name="permit firewall management" uuid="08a8c901-a57f-4995-8e1c-39d435fc90c0">
                   <to>
                     <member>any</member>
                   </to>

@@ -1,3 +1,7 @@
+
+Building configuration...
+
+  
 Current configuration : 2188 bytes
 !
 ! No configuration change since last restart
@@ -72,7 +76,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-!
+! 
 !
 !
 !
@@ -153,9 +157,11 @@ line vty 0 4
  transport preferred none
  transport input ssh
 !
-ntp server time1.google.com
 ntp server time3.google.com
-ntp server time4.google.com
+ntp server time1.google.com
 ntp server time2.google.com
+ntp server time4.google.com
 !
 end
+
+ISP1#!!!!    

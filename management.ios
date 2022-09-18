@@ -1,4 +1,8 @@
-Current configuration : 1803 bytes
+
+Building configuration...
+
+  
+Current configuration : 1792 bytes
 !
 ! No configuration change since last restart
 !
@@ -72,7 +76,7 @@ username lab privilege 15 password 0 lab
 redundancy
 !
 !
-!
+! 
 !
 !
 !
@@ -143,9 +147,12 @@ line vty 0 4
 !
 ntp server time3.google.com
 ntp server time1.google.com
-ntp server 34.202.215.187 minpoll 10
+ntp server 34.202.215.187
 ntp server pool.ntp.org
 ntp server time2.google.com
 ntp server time4.google.com
 !
 end
+
+management#
+management#

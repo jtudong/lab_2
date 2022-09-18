@@ -21,7 +21,7 @@
     </users>
     <password-complexity>
       <enabled>yes</enabled>
-      <minimum-length>8</minimum-length>
+      <minimum-length>3</minimum-length>
     </password-complexity>
   </mgt-config>
   <shared>
@@ -80,172 +80,6 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
-    <content-preview>
-      <application>
-        <entry id="10866" minver="8.1.0" name="dns-non-rfc" ori_country="USA" ori_language="English">
-          <category>networking</category>
-          <subcategory>infrastructure</subcategory>
-          <technology>network-protocol</technology>
-          <description>The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain. This App-ID detects non-rfc compliant dns traffic.</description>
-          <alg>yes</alg>
-          <appident>yes</appident>
-          <vulnerability-ident>yes</vulnerability-ident>
-          <evasive-behavior>no</evasive-behavior>
-          <consume-big-bandwidth>no</consume-big-bandwidth>
-          <used-by-malware>yes</used-by-malware>
-          <able-to-transfer-file>no</able-to-transfer-file>
-          <has-known-vulnerability>yes</has-known-vulnerability>
-          <tunnel-other-application>no</tunnel-other-application>
-          <prone-to-misuse>no</prone-to-misuse>
-          <pervasive-use>yes</pervasive-use>
-          <per-direction-regex>no</per-direction-regex>
-          <decode>dns</decode>
-          <deny-action>drop-reset</deny-action>
-          <cachable>yes</cachable>
-          <new-appid>yes</new-appid>
-          <tag minver="9.1.0">
-            <member>[Non-RFC Compliant]</member>
-          </tag>
-          <references>
-            <entry name="Wikipedia">
-              <link>http://en.wikipedia.org/wiki/Domain_name_system</link>
-            </entry>
-          </references>
-          <default>
-            <port>
-              <member>tcp/53</member>
-              <member>udp/53,5353</member>
-            </port>
-          </default>
-          <risk>3</risk>
-          <preview>yes</preview>
-        </entry>
-        <entry id="42" name="dns-base" ori_country="USA" ori_language="English">
-          <ottawa-name>dns</ottawa-name>
-          <category>networking</category>
-          <subcategory>infrastructure</subcategory>
-          <technology>network-protocol</technology>
-          <description>The Domain Name System (DNS) stores and associates many types of information with domain names. DNS translates domain names (computer hostnames) to IP addresses, as the ""phone book"" for the Internet. It translates human-readable computer hostnames, e.g. www.paloaltonetworks.com, into the IP addresses that networking equipment needs for delivering information. It also stores other information such as the list of mail exchange servers that accept e-mail for a given domain.</description>
-          <alg>yes</alg>
-          <appident>yes</appident>
-          <ident-by-sport>yes</ident-by-sport>
-          <ident-by-dport>yes</ident-by-dport>
-          <vulnerability-ident>yes</vulnerability-ident>
-          <evasive-behavior>no</evasive-behavior>
-          <consume-big-bandwidth>no</consume-big-bandwidth>
-          <used-by-malware>yes</used-by-malware>
-          <able-to-transfer-file>no</able-to-transfer-file>
-          <has-known-vulnerability>yes</has-known-vulnerability>
-          <tunnel-other-application>no</tunnel-other-application>
-          <prone-to-misuse>no</prone-to-misuse>
-          <pervasive-use>yes</pervasive-use>
-          <per-direction-regex>no</per-direction-regex>
-          <decode>dns</decode>
-          <preemptive>yes</preemptive>
-          <cachable>yes</cachable>
-          <references>
-            <entry name="Wikipedia">
-              <link>http://en.wikipedia.org/wiki/Domain_name_system</link>
-            </entry>
-          </references>
-          <default>
-            <port>
-              <member>udp/53,5353</member>
-              <member>tcp/53</member>
-            </port>
-            <extended-port>
-              <member>tcp/853/secure</member>
-              <member>tcp/53</member>
-              <member>udp/53,5353</member>
-            </extended-port>
-          </default>
-          <tunnel-applications>
-            <member>tcp-over-dns</member>
-          </tunnel-applications>
-          <risk>3</risk>
-          <application-container>dns</application-container>
-          <preview>yes</preview>
-        </entry>
-        <entry id="10867" minver="8.1.0" name="eli-link" ori_country="USA" ori_language="English">
-          <category>business-systems</category>
-          <subcategory>medical</subcategory>
-          <technology>client-server</technology>
-          <description>ELI Link is a Microsoft Windows service that acts as a data exchange gateway for Welch Allyn's line of ELI electrocardiographs. This App-ID covers the communication between ELI electrocardiographs and ELI Link.</description>
-          <appident>yes</appident>
-          <evasive-behavior>no</evasive-behavior>
-          <consume-big-bandwidth>no</consume-big-bandwidth>
-          <used-by-malware>no</used-by-malware>
-          <able-to-transfer-file>no</able-to-transfer-file>
-          <has-known-vulnerability>no</has-known-vulnerability>
-          <tunnel-other-application>no</tunnel-other-application>
-          <prone-to-misuse>no</prone-to-misuse>
-          <pervasive-use>no</pervasive-use>
-          <per-direction-regex>no</per-direction-regex>
-          <deny-action>drop-reset</deny-action>
-          <cachable>no</cachable>
-          <new-appid>yes</new-appid>
-          <references>
-            <entry name="ELI Link Admin Manual">
-              <link>https://www.hillrom.com/content/dam/hillrom-aem/us/en/sap-documents/LIT/9515-/9515-166-50-ENGLITPDF.pdf</link>
-            </entry>
-          </references>
-          <default>
-            <port>
-              <member>tcp/5101</member>
-            </port>
-          </default>
-          <risk>1</risk>
-          <preview>yes</preview>
-        </entry>
-        <entry id="10901" minver="8.1.0" name="rockwell-factorytalk-viewpoint" ori_country="USA" ori_language="English">
-          <category>business-systems</category>
-          <subcategory>ics-protocols</subcategory>
-          <technology>browser-based</technology>
-          <description>FactoryTalk&amp;#xAE; ViewPoint provides a secure interface with HMI applications through a web browser. FactoryTalk&amp;#xAE; ViewPoint enables users to deliver alarm and production data to engineering, create dashboards with high-level summary information for plant management, or do their jobs when they step away from a machine. This App-ID covers the communication between FactoryTalk&amp;#xAE; ViewPoint and an HMI device.</description>
-          <appident>yes</appident>
-          <vulnerability-ident>yes</vulnerability-ident>
-          <evasive-behavior>no</evasive-behavior>
-          <consume-big-bandwidth>no</consume-big-bandwidth>
-          <used-by-malware>no</used-by-malware>
-          <able-to-transfer-file>no</able-to-transfer-file>
-          <has-known-vulnerability>yes</has-known-vulnerability>
-          <tunnel-other-application>no</tunnel-other-application>
-          <prone-to-misuse>no</prone-to-misuse>
-          <pervasive-use>no</pervasive-use>
-          <per-direction-regex>no</per-direction-regex>
-          <deny-action>drop-reset</deny-action>
-          <cachable>no</cachable>
-          <can-disable>yes</can-disable>
-          <new-appid>yes</new-appid>
-          <tag minver="9.1.0">
-            <member>[Web App]</member>
-          </tag>
-          <references>
-            <entry name="FactoryTalk ViewPoint">
-              <link>https://www.rockwellautomation.com/en-us/products/software/factorytalk/operationsuite/view/factorytalk-viewpoint.html</link>
-            </entry>
-          </references>
-          <default>
-            <port>
-              <member>tcp/80,443</member>
-            </port>
-          </default>
-          <use-applications>
-            <member>web-browsing</member>
-          </use-applications>
-          <implicit-use-applications>
-            <member>web-browsing</member>
-          </implicit-use-applications>
-          <risk>1</risk>
-          <parent-app>web20_parrent_app</parent-app>
-          <preview>yes</preview>
-        </entry>
-      </application>
-      <application-type>
-        <category/>
-        <technology/>
-      </application-type>
-    </content-preview>
     <server-profile>
       <ldap>
         <entry name="company-AD">
@@ -254,10 +88,15 @@
               <address>dc1.company.pri</address>
               <port>389</port>
             </entry>
+            <entry name="dc2">
+              <address>dc2.company.pri</address>
+              <port>389</port>
+            </entry>
           </server>
-          <bind-dn>svc-palo</bind-dn>
-          <bind-password>-AQ==qGnQpjwEGIqumouMeWzkixYWwmg=L2I2sLYt3BZLpJQwd56Usg==</bind-password>
+          <bind-dn>svc_palo</bind-dn>
+          <bind-password>-AQ==2QNTm8FEFWcciTEa4V0q5J3A6JM=c4o+FW15a1ZDqoEiux4L3Q==</bind-password>
           <ssl>no</ssl>
+          <ldap-type>active-directory</ldap-type>
           <base>DC=company,DC=pri</base>
         </entry>
       </ldap>
@@ -280,6 +119,7 @@
       </entry>
     </authentication-profile>
     <authentication-sequence/>
+    <content-preview/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
@@ -605,13 +445,28 @@
           <update-schedule>
             <threats>
               <recurring>
-                <weekly>
-                  <day-of-week>wednesday</day-of-week>
-                  <at>01:02</at>
-                  <action>download-only</action>
-                </weekly>
+                <every-30-mins>
+                  <at>18</at>
+                  <action>download-and-install</action>
+                </every-30-mins>
               </recurring>
             </threats>
+            <anti-virus>
+              <recurring>
+                <hourly>
+                  <at>5</at>
+                  <action>download-and-install</action>
+                </hourly>
+              </recurring>
+            </anti-virus>
+            <wildfire>
+              <recurring>
+                <every-15-mins>
+                  <at>5</at>
+                  <action>download-and-install</action>
+                </every-15-mins>
+              </recurring>
+            </wildfire>
           </update-schedule>
           <timezone>America/Phoenix</timezone>
           <service>
@@ -625,6 +480,7 @@
           <dns-setting>
             <servers>
               <primary>10.1.2.10</primary>
+              <secondary>208.67.222.222</secondary>
             </servers>
           </dns-setting>
           <route>
@@ -674,6 +530,43 @@
             </service>
           </route>
           <domain>company.pri</domain>
+          <snmp-setting>
+            <access-setting>
+              <version>
+                <v2c>
+                  <snmp-community-string>company.read</snmp-community-string>
+                </v2c>
+              </version>
+            </access-setting>
+            <snmp-system>
+              <location>lab2</location>
+            </snmp-system>
+          </snmp-setting>
+          <motd-and-banner>
+            <banner-header>corpFw1</banner-header>
+            <banner-header-color>color6</banner-header-color>
+            <banner-header-text-color>color14</banner-header-text-color>
+            <banner-header-footer-match>no</banner-header-footer-match>
+          </motd-and-banner>
+          <ntp-servers>
+            <primary-ntp-server>
+              <ntp-server-address>time1.google.com</ntp-server-address>
+              <authentication-type>
+                <none/>
+              </authentication-type>
+            </primary-ntp-server>
+            <secondary-ntp-server>
+              <ntp-server-address>time2.google.com</ntp-server-address>
+              <authentication-type>
+                <none/>
+              </authentication-type>
+            </secondary-ntp-server>
+          </ntp-servers>
+          <device-telemetry>
+            <threat-prevention>no</threat-prevention>
+            <device-health-performance>no</device-health-performance>
+            <product-usage>no</product-usage>
+          </device-telemetry>
         </system>
         <setting>
           <config>
@@ -711,7 +604,7 @@
           <rulebase>
             <security>
               <rules>
-                <entry name="permit all internet" uuid="c3a7c51e-9827-4ca6-b18e-951ec70657a0">
+                <entry name="permit all internet" uuid="a32ddc07-c46a-43c1-9229-889e7ed78a46">
                   <to>
                     <member>outside</member>
                   </to>
@@ -748,7 +641,7 @@
             </security>
             <nat>
               <rules>
-                <entry name="PAT for security subnet" uuid="95147635-8124-4872-8533-685f36cb08f0">
+                <entry name="PAT for security subnet" uuid="000b03bc-0693-4017-95b8-8ba6fa7a41b5">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <translated-address>
@@ -770,7 +663,7 @@
                   </destination>
                   <service>any</service>
                 </entry>
-                <entry name="PAT for servers" uuid="258eeb5a-f76e-4fcd-b18f-47e8c93da58d">
+                <entry name="PAT for servers" uuid="44e1e004-acdc-47de-92ff-a55ebdb1d996">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <translated-address>
@@ -792,7 +685,7 @@
                   </destination>
                   <service>any</service>
                 </entry>
-                <entry name="PAT for users" uuid="1c5dd9c1-bc37-4992-b0fc-04e94ca65d52">
+                <entry name="PAT for users" uuid="853d24ae-5739-43fb-bc32-d03d29f40b1e">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <translated-address>
@@ -814,7 +707,7 @@
                   </destination>
                   <service>any</service>
                 </entry>
-                <entry name="PAT for management" uuid="3fd23d7d-26c9-4786-b49f-b652ccd6fc0a">
+                <entry name="PAT for management" uuid="ffc8669a-8646-481e-8798-ee96b291465d">
                   <source-translation>
                     <dynamic-ip-and-port>
                       <translated-address>

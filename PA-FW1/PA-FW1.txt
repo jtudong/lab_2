@@ -1,8 +1,11 @@
 set deviceconfig system type static
 set deviceconfig system update-server updates.paloaltonetworks.com
-set deviceconfig system update-schedule threats recurring weekly day-of-week wednesday
-set deviceconfig system update-schedule threats recurring weekly at 01:02
-set deviceconfig system update-schedule threats recurring weekly action download-only
+set deviceconfig system update-schedule threats recurring every-30-mins at 3
+set deviceconfig system update-schedule threats recurring every-30-mins action download-and-install
+set deviceconfig system update-schedule wildfire recurring every-15-mins at 0
+set deviceconfig system update-schedule wildfire recurring every-15-mins action download-and-install
+set deviceconfig system update-schedule anti-virus recurring hourly at 20
+set deviceconfig system update-schedule anti-virus recurring hourly action download-and-install
 set deviceconfig system timezone America/Phoenix
 set deviceconfig system service disable-telnet yes
 set deviceconfig system service disable-http yes
@@ -10,12 +13,23 @@ set deviceconfig system hostname PA-FW1
 set deviceconfig system ip-address 172.31.255.1
 set deviceconfig system netmask 255.255.255.0
 set deviceconfig system default-gateway 172.31.255.100
-set deviceconfig system dns-setting servers primary 208.67.222.222
-set deviceconfig system dns-setting servers secondary 4.2.2.1
-set deviceconfig system device-telemetry device-health-performance yes
-set deviceconfig system device-telemetry product-usage yes
-set deviceconfig system device-telemetry threat-prevention yes
+set deviceconfig system dns-setting servers primary 10.1.2.10
+set deviceconfig system dns-setting servers secondary 208.67.222.222
+set deviceconfig system device-telemetry device-health-performance no
+set deviceconfig system device-telemetry product-usage no
+set deviceconfig system device-telemetry threat-prevention no
 set deviceconfig system device-telemetry region Americas
+set deviceconfig system motd-and-banner banner-header PA-FW1
+set deviceconfig system motd-and-banner banner-header-color color14
+set deviceconfig system motd-and-banner banner-header-text-color color4
+set deviceconfig system motd-and-banner banner-header-footer-match no
+set deviceconfig system ntp-servers primary-ntp-server ntp-server-address time1.google.com
+set deviceconfig system ntp-servers primary-ntp-server authentication-type none
+set deviceconfig system ntp-servers secondary-ntp-server ntp-server-address time2.google.com
+set deviceconfig system ntp-servers secondary-ntp-server authentication-type none
+set deviceconfig system domain company.pri
+set deviceconfig system snmp-setting access-setting version v2c snmp-community-string company.read
+set deviceconfig system snmp-setting snmp-system location lab2
 set deviceconfig setting config rematch yes
 set deviceconfig setting management hostname-type-in-syslog FQDN
 set deviceconfig setting auto-mac-detect yes
@@ -175,6 +189,9 @@ set shared botnet configuration unknown-applications unknown-udp session-length 
 set shared botnet configuration unknown-applications unknown-udp session-length minimum-bytes 50
 set shared botnet report topn 100
 set shared botnet report scheduled yes
+set shared content-preview application
+set shared content-preview application-type category
+set shared content-preview application-type technology
 set zone inside network layer3 ethernet1/2
 set zone outside network layer3 ethernet1/1
 set service-group
@@ -217,5 +234,7 @@ set application
 set address home_network ip-netmask 192.168.1.0/24
 set mgt-config users admin phash $5$ivqpgkyv$f9ncQfLzzJcF5rS3DO97YDhiiw55IoMhTtL2CvC/th/
 set mgt-config users admin permissions role-based superuser yes
+set mgt-config users lab permissions role-based superreader yes
+set mgt-config users lab phash $5$xkkpisgh$9rEx503yw2h22PQTXlR61CPq0ohVP.S1CXbmCFn1b5B
 set mgt-config password-complexity enabled yes
-set mgt-config password-complexity minimum-length 8
+set mgt-config password-complexity minimum-length 3
