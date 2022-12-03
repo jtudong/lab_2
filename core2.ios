@@ -1,9 +1,8 @@
-
 Building configuration...
 
-Current configuration : 3605 bytes
+Current configuration : 3604 bytes
 !
-! Last configuration change at 21:30:26 mst Tue Aug 30 2022
+! Last configuration change at 21:18:42 mst Tue Nov 1 2022
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -18,11 +17,7 @@ boot-end-marker
 !
 !
 logging buffered 32768
-enable password cisco
 !
-username cisco privilege 15 password 0 cisco
-username lab privilege 15 password 0 lab
-no aaa new-model
 clock timezone mst -7 0
 !
 !
@@ -170,9 +165,6 @@ ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 !
 !
 !
-snmp-server community company.read RO
-snmp-server location Corp
-snmp-server chassis-id core2
 snmp ifmib ifindex persist
 !
 control-plane
@@ -206,4 +198,3 @@ ntp server time4.google.com
 !
 end
 
-core2#q

@@ -1,4 +1,3 @@
-
 Building configuration...
 
   
@@ -18,9 +17,7 @@ boot-end-marker
 !
 !
 logging buffered 32768
-enable password cisco
 !
-no aaa new-model
 !
 !
 !
@@ -70,8 +67,6 @@ multilink bundle-name authenticated
 !
 !
 !
-username cisco privilege 15 password 0 cisco
-username lab privilege 15 password 0 lab
 !
 redundancy
 !
@@ -135,10 +130,6 @@ ip ssh version 2
 !
 ipv6 ioam timestamp
 !
-snmp-server community company.read RO
-snmp-server ifindex persist
-snmp-server location Corp
-snmp-server chassis-id corpInet1
 !
 !
 control-plane
@@ -169,11 +160,10 @@ line vty 0 4
  transport output telnet ssh
  escape-character BREAK
 !
-ntp server time3.google.com
 ntp server time1.google.com
-ntp server time2.google.com
+ntp server time3.google.com
 ntp server time4.google.com
+ntp server time2.google.com
 !
 end
 
-corpInet1#q

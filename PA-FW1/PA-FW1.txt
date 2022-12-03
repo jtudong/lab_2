@@ -1,240 +1,606 @@
-set deviceconfig system type static
-set deviceconfig system update-server updates.paloaltonetworks.com
-set deviceconfig system update-schedule threats recurring every-30-mins at 3
-set deviceconfig system update-schedule threats recurring every-30-mins action download-and-install
-set deviceconfig system update-schedule wildfire recurring every-15-mins at 0
-set deviceconfig system update-schedule wildfire recurring every-15-mins action download-and-install
-set deviceconfig system update-schedule anti-virus recurring hourly at 20
-set deviceconfig system update-schedule anti-virus recurring hourly action download-and-install
-set deviceconfig system timezone America/Phoenix
-set deviceconfig system service disable-telnet yes
-set deviceconfig system service disable-http yes
-set deviceconfig system hostname PA-FW1
-set deviceconfig system ip-address 172.31.255.1
-set deviceconfig system netmask 255.255.255.0
-set deviceconfig system default-gateway 172.31.255.100
-set deviceconfig system dns-setting servers primary 10.1.2.10
-set deviceconfig system dns-setting servers secondary 208.67.222.222
-set deviceconfig system device-telemetry device-health-performance no
-set deviceconfig system device-telemetry product-usage no
-set deviceconfig system device-telemetry threat-prevention no
-set deviceconfig system device-telemetry region Americas
-set deviceconfig system motd-and-banner banner-header PA-FW1
-set deviceconfig system motd-and-banner banner-header-color color14
-set deviceconfig system motd-and-banner banner-header-text-color color4
-set deviceconfig system motd-and-banner banner-header-footer-match no
-set deviceconfig system ntp-servers primary-ntp-server ntp-server-address time1.google.com
-set deviceconfig system ntp-servers primary-ntp-server authentication-type none
-set deviceconfig system ntp-servers secondary-ntp-server ntp-server-address time2.google.com
-set deviceconfig system ntp-servers secondary-ntp-server authentication-type none
-set deviceconfig system domain company.pri
-set deviceconfig system snmp-setting access-setting version v2c snmp-community-string company.read
-set deviceconfig system snmp-setting snmp-system location lab2
-set deviceconfig setting config rematch yes
-set deviceconfig setting management hostname-type-in-syslog FQDN
-set deviceconfig setting auto-mac-detect yes
-set network interface ethernet ethernet1/1 layer3 ndp-proxy enabled no
-set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat enable no
-set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat static-ip
-set network interface ethernet ethernet1/1 layer3 sdwan-link-settings enable no
-set network interface ethernet ethernet1/1 layer3 lldp enable no
-set network interface ethernet ethernet1/1 layer3 ip 192.168.1.16/24
-set network interface ethernet ethernet1/1 layer3 interface-management-profile https-ssh-ping
-set network interface ethernet ethernet1/2 layer3 ndp-proxy enabled no
-set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat enable no
-set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat static-ip
-set network interface ethernet ethernet1/2 layer3 sdwan-link-settings enable no
-set network interface ethernet ethernet1/2 layer3 ip 172.16.0.1/24
-set network interface ethernet ethernet1/2 layer3 interface-management-profile https-ssh-ping
-set network interface ethernet ethernet1/2 layer3 lldp enable no
-set network profiles monitor-profile default interval 3
-set network profiles monitor-profile default threshold 5
-set network profiles monitor-profile default action wait-recover
-set network profiles interface-management-profile https-ssh-ping https yes
-set network profiles interface-management-profile https-ssh-ping ssh yes
-set network profiles interface-management-profile https-ssh-ping ping yes
-set network ike crypto-profiles ike-crypto-profiles default encryption [ aes-128-cbc 3des ]
-set network ike crypto-profiles ike-crypto-profiles default hash sha1
-set network ike crypto-profiles ike-crypto-profiles default dh-group group2
-set network ike crypto-profiles ike-crypto-profiles default lifetime hours 8
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 encryption aes-128-cbc
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 hash sha256
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 dh-group group19
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 lifetime hours 8
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 encryption aes-256-cbc
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 hash sha384
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 dh-group group20
-set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 lifetime hours 8
-set network ike crypto-profiles ipsec-crypto-profiles default esp encryption [ aes-128-cbc 3des ]
-set network ike crypto-profiles ipsec-crypto-profiles default esp authentication sha1
-set network ike crypto-profiles ipsec-crypto-profiles default dh-group group2
-set network ike crypto-profiles ipsec-crypto-profiles default lifetime hours 1
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 esp encryption aes-128-gcm
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 esp authentication none
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 dh-group group19
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 lifetime hours 1
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 esp encryption aes-256-gcm
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 esp authentication none
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 dh-group group20
-set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 lifetime hours 1
-set network ike crypto-profiles global-protect-app-crypto-profiles default encryption aes-128-cbc
-set network ike crypto-profiles global-protect-app-crypto-profiles default authentication sha1
-set network qos profile default class-bandwidth-type mbps class class1 priority real-time
-set network qos profile default class-bandwidth-type mbps class class2 priority high
-set network qos profile default class-bandwidth-type mbps class class3 priority high
-set network qos profile default class-bandwidth-type mbps class class4 priority medium
-set network qos profile default class-bandwidth-type mbps class class5 priority medium
-set network qos profile default class-bandwidth-type mbps class class6 priority low
-set network qos profile default class-bandwidth-type mbps class class7 priority low
-set network qos profile default class-bandwidth-type mbps class class8 priority low
-set network virtual-router default protocol bgp enable yes
-set network virtual-router default protocol bgp dampening-profile default cutoff 1.25
-set network virtual-router default protocol bgp dampening-profile default reuse 0.5
-set network virtual-router default protocol bgp dampening-profile default max-hold-time 900
-set network virtual-router default protocol bgp dampening-profile default decay-half-life-reachable 300
-set network virtual-router default protocol bgp dampening-profile default decay-half-life-unreachable 900
-set network virtual-router default protocol bgp dampening-profile default enable yes
-set network virtual-router default protocol bgp routing-options graceful-restart enable yes
-set network virtual-router default protocol bgp allow-redist-default-route yes
-set network virtual-router default protocol bgp router-id 172.16.0.1
-set network virtual-router default protocol bgp local-as 65000
-set network virtual-router default protocol bgp peer-group ISP type ebgp remove-private-as no
-set network virtual-router default protocol bgp peer-group ISP type ebgp import-nexthop original
-set network virtual-router default protocol bgp peer-group ISP type ebgp export-nexthop resolve
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 peer-address ip 172.16.0.2
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options incoming-bgp-connection remote-port 0
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options incoming-bgp-connection allow yes
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options outgoing-bgp-connection local-port 0
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options outgoing-bgp-connection allow yes
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options multihop 0
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options keep-alive-interval 30
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options open-delay-time 0
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options hold-time 90
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options idle-hold-time 15
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 connection-options min-route-adv-interval 30
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 subsequent-address-family-identifier unicast yes
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 subsequent-address-family-identifier multicast no
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 local-address ip 172.16.0.1/24
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 local-address interface ethernet1/2
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 bfd profile Inherit-vr-global-setting
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 max-prefixes 5000
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 enable yes
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 peer-as 65001
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 enable-mp-bgp no
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 address-family-identifier ipv4
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 enable-sender-side-loop-detection yes
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 reflector-client non-client
-set network virtual-router default protocol bgp peer-group ISP peer ISP1 peering-type unspecified
-set network virtual-router default protocol bgp peer-group ISP aggregated-confed-as-path yes
-set network virtual-router default protocol bgp peer-group ISP soft-reset-with-stored-info yes
-set network virtual-router default protocol bgp peer-group ISP enable yes
-set network virtual-router default protocol bgp policy import rules ISP_import action allow update as-path none
-set network virtual-router default protocol bgp policy import rules ISP_import action allow update community none
-set network virtual-router default protocol bgp policy import rules ISP_import action allow update extended-community none
-set network virtual-router default protocol bgp policy import rules ISP_import match from-peer ISP1
-set network virtual-router default protocol bgp policy import rules ISP_import match route-table unicast
-set network virtual-router default protocol bgp policy import rules ISP_import used-by ISP
-set network virtual-router default protocol bgp policy import rules ISP_import enable yes
-set network virtual-router default protocol bgp policy export rules ISP_export action allow update as-path none
-set network virtual-router default protocol bgp policy export rules ISP_export action allow update community none
-set network virtual-router default protocol bgp policy export rules ISP_export action allow update extended-community none
-set network virtual-router default protocol bgp policy export rules ISP_export match as-path regex .*
-set network virtual-router default protocol bgp policy export rules ISP_export match route-table unicast
-set network virtual-router default protocol bgp policy export rules ISP_export used-by ISP
-set network virtual-router default protocol bgp policy export rules ISP_export enable yes
-set network virtual-router default protocol bgp install-route yes
-set network virtual-router default protocol bgp redist-rules send_default address-family-identifier ipv4
-set network virtual-router default protocol bgp redist-rules send_default enable yes
-set network virtual-router default protocol bgp redist-rules send_default set-origin incomplete
-set network virtual-router default protocol rip enable no
-set network virtual-router default protocol ospf enable no
-set network virtual-router default protocol ospfv3 enable no
-set network virtual-router default protocol redist-profile send_default filter type static
-set network virtual-router default protocol redist-profile send_default filter destination 0.0.0.0/0
-set network virtual-router default protocol redist-profile send_default priority 10
-set network virtual-router default protocol redist-profile send_default action redist
-set network virtual-router default interface [ ethernet1/1 ethernet1/2 ]
-set network virtual-router default ecmp algorithm ip-modulo
-set network virtual-router default routing-table ip static-route default nexthop ip-address 192.168.1.1
-set network virtual-router default routing-table ip static-route default bfd profile None
-set network virtual-router default routing-table ip static-route default path-monitor enable no
-set network virtual-router default routing-table ip static-route default path-monitor failure-condition any
-set network virtual-router default routing-table ip static-route default path-monitor hold-time 2
-set network virtual-router default routing-table ip static-route default interface ethernet1/1
-set network virtual-router default routing-table ip static-route default metric 10
-set network virtual-router default routing-table ip static-route default destination 0.0.0.0/0
-set network virtual-router default routing-table ip static-route default route-table unicast
-set shared application
-set shared application-group
-set shared service
-set shared service-group
-set shared botnet configuration http dynamic-dns enabled yes
-set shared botnet configuration http dynamic-dns threshold 5
-set shared botnet configuration http malware-sites enabled yes
-set shared botnet configuration http malware-sites threshold 5
-set shared botnet configuration http recent-domains enabled yes
-set shared botnet configuration http recent-domains threshold 5
-set shared botnet configuration http ip-domains enabled yes
-set shared botnet configuration http ip-domains threshold 10
-set shared botnet configuration http executables-from-unknown-sites enabled yes
-set shared botnet configuration http executables-from-unknown-sites threshold 5
-set shared botnet configuration other-applications irc yes
-set shared botnet configuration unknown-applications unknown-tcp destinations-per-hour 10
-set shared botnet configuration unknown-applications unknown-tcp sessions-per-hour 10
-set shared botnet configuration unknown-applications unknown-tcp session-length maximum-bytes 100
-set shared botnet configuration unknown-applications unknown-tcp session-length minimum-bytes 50
-set shared botnet configuration unknown-applications unknown-udp destinations-per-hour 10
-set shared botnet configuration unknown-applications unknown-udp sessions-per-hour 10
-set shared botnet configuration unknown-applications unknown-udp session-length maximum-bytes 100
-set shared botnet configuration unknown-applications unknown-udp session-length minimum-bytes 50
-set shared botnet report topn 100
-set shared botnet report scheduled yes
-set shared content-preview application
-set shared content-preview application-type category
-set shared content-preview application-type technology
-set zone inside network layer3 ethernet1/2
-set zone outside network layer3 ethernet1/1
-set service-group
-set service
-set schedule
-set rulebase nat rules "public access" source-translation dynamic-ip-and-port interface-address ip 192.168.1.16/24
-set rulebase nat rules "public access" source-translation dynamic-ip-and-port interface-address interface ethernet1/1
-set rulebase nat rules "public access" to outside
-set rulebase nat rules "public access" from any
-set rulebase nat rules "public access" source any
-set rulebase nat rules "public access" destination any
-set rulebase nat rules "public access" service any
-set rulebase nat rules "public access" to-interface ethernet1/1
-set rulebase security rules "permit all internet" to outside
-set rulebase security rules "permit all internet" from inside
-set rulebase security rules "permit all internet" source any
-set rulebase security rules "permit all internet" destination any
-set rulebase security rules "permit all internet" source-user any
-set rulebase security rules "permit all internet" category any
-set rulebase security rules "permit all internet" application any
-set rulebase security rules "permit all internet" service application-default
-set rulebase security rules "permit all internet" source-hip any
-set rulebase security rules "permit all internet" destination-hip any
-set rulebase security rules "permit all internet" action allow
-set rulebase security rules "permit firewall management" to any
-set rulebase security rules "permit firewall management" from outside
-set rulebase security rules "permit firewall management" source home_network
-set rulebase security rules "permit firewall management" destination 192.168.1.16
-set rulebase security rules "permit firewall management" source-user any
-set rulebase security rules "permit firewall management" category any
-set rulebase security rules "permit firewall management" application [ ping ssh ssl ]
-set rulebase security rules "permit firewall management" service application-default
-set rulebase security rules "permit firewall management" source-hip any
-set rulebase security rules "permit firewall management" destination-hip any
-set rulebase security rules "permit firewall management" action allow
-set rulebase security rules "permit firewall management" log-start yes
-set import network interface [ ethernet1/1 ethernet1/2 ]
-set application-group
-set application
-set address home_network ip-netmask 192.168.1.0/24
-set mgt-config users admin phash $5$ivqpgkyv$f9ncQfLzzJcF5rS3DO97YDhiiw55IoMhTtL2CvC/th/
-set mgt-config users admin permissions role-based superuser yes
-set mgt-config users lab permissions role-based superreader yes
-set mgt-config users lab phash $5$xkkpisgh$9rEx503yw2h22PQTXlR61CPq0ohVP.S1CXbmCFn1b5B
-set mgt-config password-complexity enabled yes
-set mgt-config password-complexity minimum-length 3
+config {
+  shared {
+    application;
+    application-group;
+    service;
+    service-group;
+    botnet {
+      configuration {
+        http {
+          dynamic-dns {
+            enabled yes;
+            threshold 5;
+          }
+          malware-sites {
+            enabled yes;
+            threshold 5;
+          }
+          recent-domains {
+            enabled yes;
+            threshold 5;
+          }
+          ip-domains {
+            enabled yes;
+            threshold 10;
+          }
+          executables-from-unknown-sites {
+            enabled yes;
+            threshold 5;
+          }
+        }
+        other-applications {
+          irc yes;
+        }
+        unknown-applications {
+          unknown-tcp {
+            destinations-per-hour 10;
+            sessions-per-hour 10;
+            session-length {
+              maximum-bytes 100;
+              minimum-bytes 50;
+            }
+          }
+          unknown-udp {
+            destinations-per-hour 10;
+            sessions-per-hour 10;
+            session-length {
+              maximum-bytes 100;
+              minimum-bytes 50;
+            }
+          }
+        }
+      }
+      report {
+        topn 100;
+        scheduled yes;
+      }
+    }
+  }
+  devices {
+    localhost.localdomain {
+      network {
+        interface {
+          ethernet {
+            ethernet1/1 {
+              layer3 {
+                ndp-proxy {
+                  enabled no;
+                }
+                sdwan-link-settings {
+                  upstream-nat {
+                    enable no;
+                    static-ip;
+                  }
+                  enable no;
+                }
+                lldp {
+                  enable no;
+                }
+                ip {
+                  192.168.1.16/24;
+                }
+                interface-management-profile https-ssh-ping;
+              }
+            }
+            ethernet1/2 {
+              layer3 {
+                ndp-proxy {
+                  enabled no;
+                }
+                sdwan-link-settings {
+                  upstream-nat {
+                    enable no;
+                    static-ip;
+                  }
+                  enable no;
+                }
+                ip {
+                  172.16.0.1/24;
+                }
+                interface-management-profile https-ssh-ping;
+                lldp {
+                  enable no;
+                }
+              }
+            }
+          }
+        }
+        profiles {
+          monitor-profile {
+            default {
+              interval 3;
+              threshold 5;
+              action wait-recover;
+            }
+          }
+          interface-management-profile {
+            https-ssh-ping {
+              https yes;
+              ssh yes;
+              ping yes;
+            }
+          }
+        }
+        ike {
+          crypto-profiles {
+            ike-crypto-profiles {
+              default {
+                encryption [ aes-128-cbc 3des];
+                hash sha1;
+                dh-group group2;
+                lifetime {
+                  hours 8;
+                }
+              }
+              Suite-B-GCM-128 {
+                encryption aes-128-cbc;
+                hash sha256;
+                dh-group group19;
+                lifetime {
+                  hours 8;
+                }
+              }
+              Suite-B-GCM-256 {
+                encryption aes-256-cbc;
+                hash sha384;
+                dh-group group20;
+                lifetime {
+                  hours 8;
+                }
+              }
+            }
+            ipsec-crypto-profiles {
+              default {
+                esp {
+                  encryption [ aes-128-cbc 3des];
+                  authentication sha1;
+                }
+                dh-group group2;
+                lifetime {
+                  hours 1;
+                }
+              }
+              Suite-B-GCM-128 {
+                esp {
+                  encryption aes-128-gcm;
+                  authentication none;
+                }
+                dh-group group19;
+                lifetime {
+                  hours 1;
+                }
+              }
+              Suite-B-GCM-256 {
+                esp {
+                  encryption aes-256-gcm;
+                  authentication none;
+                }
+                dh-group group20;
+                lifetime {
+                  hours 1;
+                }
+              }
+            }
+            global-protect-app-crypto-profiles {
+              default {
+                encryption aes-128-cbc;
+                authentication sha1;
+              }
+            }
+          }
+        }
+        qos {
+          profile {
+            default {
+              class-bandwidth-type {
+                mbps {
+                  class {
+                    class1 {
+                      priority real-time;
+                    }
+                    class2 {
+                      priority high;
+                    }
+                    class3 {
+                      priority high;
+                    }
+                    class4 {
+                      priority medium;
+                    }
+                    class5 {
+                      priority medium;
+                    }
+                    class6 {
+                      priority low;
+                    }
+                    class7 {
+                      priority low;
+                    }
+                    class8 {
+                      priority low;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        virtual-router {
+          default {
+            protocol {
+              bgp {
+                enable yes;
+                dampening-profile {
+                  default {
+                    cutoff 1.25;
+                    reuse 0.5;
+                    max-hold-time 900;
+                    decay-half-life-reachable 300;
+                    decay-half-life-unreachable 900;
+                    enable yes;
+                  }
+                }
+                routing-options {
+                  graceful-restart {
+                    enable yes;
+                  }
+                }
+                allow-redist-default-route yes;
+                router-id 172.16.0.1;
+                local-as 65000;
+                peer-group {
+                  ISP {
+                    type {
+                      ebgp {
+                        remove-private-as no;
+                        import-nexthop original;
+                        export-nexthop resolve;
+                      }
+                    }
+                    peer {
+                      ISP1 {
+                        peer-address {
+                          ip 172.16.0.2;
+                        }
+                        connection-options {
+                          incoming-bgp-connection {
+                            remote-port 0;
+                            allow yes;
+                          }
+                          outgoing-bgp-connection {
+                            local-port 0;
+                            allow yes;
+                          }
+                          multihop 0;
+                          keep-alive-interval 30;
+                          open-delay-time 0;
+                          hold-time 90;
+                          idle-hold-time 15;
+                          min-route-adv-interval 30;
+                        }
+                        subsequent-address-family-identifier {
+                          unicast yes;
+                          multicast no;
+                        }
+                        local-address {
+                          ip 172.16.0.1/24;
+                          interface ethernet1/2;
+                        }
+                        bfd {
+                          profile Inherit-vr-global-setting;
+                        }
+                        max-prefixes 5000;
+                        enable yes;
+                        peer-as 65001;
+                        enable-mp-bgp no;
+                        address-family-identifier ipv4;
+                        enable-sender-side-loop-detection yes;
+                        reflector-client non-client;
+                        peering-type unspecified;
+                      }
+                    }
+                    aggregated-confed-as-path yes;
+                    soft-reset-with-stored-info yes;
+                    enable yes;
+                  }
+                }
+                policy {
+                  import {
+                    rules {
+                      ISP_import {
+                        action {
+                          allow {
+                            update {
+                              as-path {
+                                none;
+                              }
+                              community {
+                                none;
+                              }
+                              extended-community {
+                                none;
+                              }
+                            }
+                          }
+                        }
+                        match {
+                          from-peer ISP1;
+                          route-table unicast;
+                        }
+                        used-by ISP;
+                        enable yes;
+                      }
+                    }
+                  }
+                  export {
+                    rules {
+                      ISP_export {
+                        action {
+                          allow {
+                            update {
+                              as-path {
+                                none;
+                              }
+                              community {
+                                none;
+                              }
+                              extended-community {
+                                none;
+                              }
+                            }
+                          }
+                        }
+                        match {
+                          as-path {
+                            regex .*;
+                          }
+                          route-table unicast;
+                        }
+                        used-by ISP;
+                        enable yes;
+                      }
+                    }
+                  }
+                }
+                install-route yes;
+                redist-rules {
+                  send_default {
+                    address-family-identifier ipv4;
+                    enable yes;
+                    set-origin incomplete;
+                  }
+                }
+              }
+              rip {
+                enable no;
+              }
+              ospf {
+                enable no;
+              }
+              ospfv3 {
+                enable no;
+              }
+              redist-profile {
+                send_default {
+                  filter {
+                    type static;
+                    destination 0.0.0.0/0;
+                  }
+                  priority 10;
+                  action {
+                    redist;
+                  }
+                }
+              }
+            }
+            interface [ ethernet1/1 ethernet1/2];
+            ecmp {
+              algorithm {
+                ip-modulo;
+              }
+            }
+            routing-table {
+              ip {
+                static-route {
+                  default {
+                    nexthop {
+                      ip-address 192.168.1.1;
+                    }
+                    bfd {
+                      profile None;
+                    }
+                    path-monitor {
+                      enable no;
+                      failure-condition any;
+                      hold-time 2;
+                    }
+                    interface ethernet1/1;
+                    metric 10;
+                    destination 0.0.0.0/0;
+                    route-table {
+                      unicast;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      deviceconfig {
+        system {
+          type {
+            static;
+          }
+          update-server updates.paloaltonetworks.com;
+          update-schedule {
+            threats {
+              recurring {
+                every-30-mins {
+                  at 3;
+                  action download-and-install;
+                }
+              }
+            }
+            wildfire {
+              recurring {
+                every-15-mins {
+                  at 0;
+                  action download-and-install;
+                }
+              }
+            }
+            anti-virus {
+              recurring {
+                hourly {
+                  at 20;
+                  action download-and-install;
+                }
+              }
+            }
+          }
+          timezone America/Phoenix;
+          service {
+            disable-telnet yes;
+            disable-http yes;
+          }
+          hostname PA-FW1;
+          ip-address 172.31.255.1;
+          netmask 255.255.255.0;
+          default-gateway 172.31.255.100;
+          dns-setting {
+            servers {
+              primary 10.1.2.10;
+              secondary 208.67.222.222;
+            }
+          }
+          device-telemetry {
+            device-health-performance no;
+            product-usage no;
+            threat-prevention no;
+            region Americas;
+          }
+          motd-and-banner {
+            banner-header PA-FW1;
+            banner-header-color color14;
+            banner-header-text-color color4;
+            banner-header-footer-match no;
+          }
+          ntp-servers {
+            primary-ntp-server {
+              ntp-server-address time1.google.com;
+              authentication-type {
+                none;
+              }
+            }
+            secondary-ntp-server {
+              ntp-server-address time2.google.com;
+              authentication-type {
+                none;
+              }
+            }
+          }
+          domain company.pri;
+          snmp-setting {
+            snmp-system {
+              location lab2;
+            }
+          }
+        }
+        setting {
+          config {
+            rematch yes;
+          }
+          management {
+            hostname-type-in-syslog FQDN;
+          }
+          auto-mac-detect yes;
+        }
+      }
+      vsys {
+        vsys1 {
+          application;
+          application-group;
+          zone {
+            inside {
+              network {
+                layer3 ethernet1/2;
+              }
+            }
+            outside {
+              network {
+                layer3 ethernet1/1;
+              }
+            }
+          }
+          service;
+          service-group;
+          schedule;
+          rulebase {
+            nat {
+              rules {
+                "public access" c31d61b1-a49c-40aa-b44a-ffb2f7c3ece5 {
+                  source-translation {
+                    dynamic-ip-and-port {
+                      interface-address {
+                        ip 192.168.1.16/24;
+                        interface ethernet1/1;
+                      }
+                    }
+                  }
+                  to outside;
+                  from any;
+                  source any;
+                  destination any;
+                  service any;
+                  to-interface ethernet1/1;
+                }
+              }
+            }
+            security {
+              rules {
+                "permit all internet" 5e64c791-e07b-4875-9ebe-a838306ac843 {
+                  to outside;
+                  from inside;
+                  source any;
+                  destination any;
+                  source-user any;
+                  category any;
+                  application any;
+                  service application-default;
+                  source-hip any;
+                  destination-hip any;
+                  action allow;
+                }
+                "permit firewall management" 08a8c901-a57f-4995-8e1c-39d435fc90c0 {
+                  to any;
+                  from outside;
+                  source home_network;
+                  destination 192.168.1.16;
+                  source-user any;
+                  category any;
+                  application [ ping ssh ssl];
+                  service application-default;
+                  source-hip any;
+                  destination-hip any;
+                  action allow;
+                  log-start yes;
+                }
+              }
+            }
+          }
+          import {
+            network {
+              interface [ ethernet1/1 ethernet1/2];
+            }
+          }
+          address {
+            home_network {
+              ip-netmask 192.168.1.0/24;
+            }
+          }
+        }
+      }
+    }
+  }
+}
