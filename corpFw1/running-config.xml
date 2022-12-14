@@ -18,6 +18,14 @@
         </permissions>
         <authentication-profile>ldap</authentication-profile>
       </entry>
+      <entry name="lab">
+        <permissions>
+          <role-based>
+            <superreader>yes</superreader>
+          </role-based>
+        </permissions>
+        <phash>$5$dhopgvox$SuNIJf4p3cPyuDNihYDCDl0ahF92dC1vyc2UIptsZ2/</phash>
+      </entry>
     </users>
     <password-complexity>
       <enabled>yes</enabled>
@@ -85,11 +93,7 @@
         <entry name="company-AD">
           <server>
             <entry name="dc1">
-              <address>dc1.company.pri</address>
-              <port>389</port>
-            </entry>
-            <entry name="dc2">
-              <address>dc2.company.pri</address>
+              <address>10.1.2.10</address>
               <port>389</port>
             </entry>
           </server>
@@ -119,7 +123,6 @@
       </entry>
     </authentication-profile>
     <authentication-sequence/>
-    <content-preview/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
@@ -171,7 +174,33 @@
                 <interface-management-profile>https-ssh-ping-snmp</interface-management-profile>
               </layer3>
             </entry>
+            <entry name="ethernet1/3">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip/>
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <ip>
+                  <entry name="172.31.255.109/24"/>
+                  <entry name="dc1 source NAT IP"/>
+                </ip>
+                <lldp>
+                  <enable>no</enable>
+                </lldp>
+                <interface-management-profile>ping</interface-management-profile>
+              </layer3>
+              <comment>outside backup server access to lab servers</comment>
+            </entry>
           </ethernet>
+          <loopback>
+            <units/>
+          </loopback>
         </interface>
         <profiles>
           <monitor-profile>
@@ -424,12 +453,39 @@
             <interface>
               <member>ethernet1/1</member>
               <member>ethernet1/2</member>
+              <member>ethernet1/3</member>
             </interface>
             <ecmp>
               <algorithm>
                 <ip-modulo/>
               </algorithm>
             </ecmp>
+            <routing-table>
+              <ip>
+                <static-route>
+                  <entry name="backup servers">
+                    <path-monitor>
+                      <enable>no</enable>
+                      <failure-condition>any</failure-condition>
+                      <hold-time>2</hold-time>
+                    </path-monitor>
+                    <nexthop>
+                      <ip-address>172.31.255.100</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <interface>ethernet1/3</interface>
+                    <metric>10</metric>
+                    <admin-dist>240</admin-dist>
+                    <destination>172.31.254.0/25</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                </static-route>
+              </ip>
+            </routing-table>
           </entry>
         </virtual-router>
         <lldp>
@@ -479,7 +535,7 @@
           <default-gateway>172.31.255.100</default-gateway>
           <dns-setting>
             <servers>
-              <primary>10.1.2.10</primary>
+              <primary>4.2.2.1</primary>
               <secondary>208.67.222.222</secondary>
             </servers>
           </dns-setting>
@@ -597,6 +653,13 @@
                 </layer3>
               </network>
             </entry>
+            <entry name="backup">
+              <network>
+                <layer3>
+                  <member>ethernet1/3</member>
+                </layer3>
+              </network>
+            </entry>
           </zone>
           <service/>
           <service-group/>
@@ -604,6 +667,41 @@
           <rulebase>
             <security>
               <rules>
+                <entry name="permit core1 ip sla to isp1" uuid="f99005e6-c6d8-43da-83ec-9467a067dd5a">
+                  <to>
+                    <member>outside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                  </from>
+                  <source>
+                    <member>10.1.1.2</member>
+                  </source>
+                  <destination>
+                    <member>ISP1-e0-1-1</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>any</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>interzone</rule-type>
+                  <disabled>no</disabled>
+                </entry>
                 <entry name="permit all internet" uuid="a32ddc07-c46a-43c1-9229-889e7ed78a46">
                   <to>
                     <member>outside</member>
@@ -636,6 +734,183 @@
                     <member>any</member>
                   </destination-hip>
                   <action>allow</action>
+                </entry>
+                <entry name="permit dns" uuid="429ae1ab-1b2b-4749-8ea0-e41f1a9c93ee">
+                  <to>
+                    <member>inside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>DC1</member>
+                    <member>DC2</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>dns</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>intrazone</rule-type>
+                </entry>
+                <entry name="Permit OSPF" uuid="ac20d30e-d2f1-43ab-9bca-9f50b84125bc">
+                  <to>
+                    <member>inside</member>
+                    <member>outside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                    <member>outside</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>ospf</member>
+                    <member>ospfigp</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>intrazone</rule-type>
+                </entry>
+                <entry name="Permit ldap" uuid="6ebe3640-c556-43da-b2d0-bcfcc7c6dda3">
+                  <to>
+                    <member>inside</member>
+                  </to>
+                  <from>
+                    <member>inside</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>ldap</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>intrazone</rule-type>
+                </entry>
+                <entry name="Permit ping on backup net" uuid="5ca3ec99-7d2e-49dc-85c2-69bb6ba55d26">
+                  <to>
+                    <member>backup</member>
+                  </to>
+                  <from>
+                    <member>backup</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>172.31.255.109</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>ping</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <action>allow</action>
+                  <rule-type>universal</rule-type>
+                </entry>
+                <entry name="Permit backup" uuid="c60cff4d-0328-4fbd-b192-ec1737045eef">
+                  <to>
+                    <member>inside</member>
+                  </to>
+                  <from>
+                    <member>backup</member>
+                  </from>
+                  <source>
+                    <member>any</member>
+                  </source>
+                  <destination>
+                    <member>any</member>
+                  </destination>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>any</member>
+                  </service>
+                  <source-hip>
+                    <member>any</member>
+                  </source-hip>
+                  <destination-hip>
+                    <member>any</member>
+                  </destination-hip>
+                  <tag>
+                    <member>backup</member>
+                  </tag>
+                  <action>allow</action>
+                  <description>traffic from home net (192.168.1.0/24) via Management router NATted to 172.31.255.2xx</description>
                 </entry>
               </rules>
             </security>
@@ -729,14 +1004,49 @@
                   </destination>
                   <service>any</service>
                 </entry>
+                <entry name="Nat for dc1 backup" uuid="5e737b21-e76d-40d5-9335-68c77c19867b">
+                  <destination-translation>
+                    <translated-address>DC1</translated-address>
+                  </destination-translation>
+                  <to>
+                    <member>backup</member>
+                  </to>
+                  <from>
+                    <member>backup</member>
+                  </from>
+                  <source>
+                    <member>Home network source NAT</member>
+                  </source>
+                  <destination>
+                    <member>dc1 source NAT IP</member>
+                  </destination>
+                  <service>any</service>
+                  <description>translation for dc1 backup from home backup server</description>
+                  <to-interface>ethernet1/3</to-interface>
+                </entry>
               </rules>
             </nat>
+            <default-security-rules>
+              <rules>
+                <entry name="intrazone-default" uuid="6b8508fd-570d-4ed7-956b-4094e951fde1">
+                  <action>drop</action>
+                  <log-start>yes</log-start>
+                  <log-end>no</log-end>
+                </entry>
+                <entry name="interzone-default" uuid="bc52e405-6e68-44e0-9042-903d20535535">
+                  <action>deny</action>
+                  <log-start>yes</log-start>
+                  <log-end>no</log-end>
+                </entry>
+              </rules>
+            </default-security-rules>
           </rulebase>
           <import>
             <network>
               <interface>
                 <member>ethernet1/1</member>
                 <member>ethernet1/2</member>
+                <member>ethernet1/3</member>
               </interface>
             </network>
           </import>
@@ -757,6 +1067,27 @@
             <entry name="vlan-7-management">
               <ip-netmask>10.1.4.0/24</ip-netmask>
             </entry>
+            <entry name="ISP1-e0-1-1">
+              <ip-netmask>172.16.1.1/32</ip-netmask>
+            </entry>
+            <entry name="DC1">
+              <ip-netmask>10.1.2.10</ip-netmask>
+            </entry>
+            <entry name="DC2">
+              <ip-netmask>10.1.2.11</ip-netmask>
+            </entry>
+            <entry name="Home Network">
+              <ip-netmask>192.168.1.0/24</ip-netmask>
+              <tag>
+                <member>backup</member>
+              </tag>
+            </entry>
+            <entry name="dc1 source NAT IP">
+              <ip-netmask>172.31.254.130/32</ip-netmask>
+            </entry>
+            <entry name="Home network source NAT">
+              <ip-netmask>172.31.254.0/25</ip-netmask>
+            </entry>
           </address>
           <address-group>
             <entry name="nat-group-servers">
@@ -769,7 +1100,24 @@
                 <member>vlan-6-users1</member>
               </static>
             </entry>
+            <entry name="backup-targets">
+              <static>
+                <member>dc1 source NAT IP</member>
+              </static>
+              <description>Source NAT IPs for backup</description>
+            </entry>
           </address-group>
+          <tag>
+            <entry name="inside">
+              <color>color2</color>
+            </entry>
+            <entry name="outside">
+              <color>color1</color>
+            </entry>
+            <entry name="backup">
+              <color>color3</color>
+            </entry>
+          </tag>
         </entry>
       </vsys>
     </entry>
