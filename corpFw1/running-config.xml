@@ -188,7 +188,8 @@
                 </sdwan-link-settings>
                 <ip>
                   <entry name="172.31.255.109/24"/>
-                  <entry name="dc1 source NAT IP"/>
+                  <entry name="dc1 NAT inside global IP"/>
+                  <entry name="dc2 NAT inside global IP"/>
                 </ip>
                 <lldp>
                   <enable>no</enable>
@@ -1015,13 +1016,32 @@
                     <member>backup</member>
                   </from>
                   <source>
-                    <member>Home network source NAT</member>
+                    <member>Home network global IP net</member>
                   </source>
                   <destination>
-                    <member>dc1 source NAT IP</member>
+                    <member>dc1 NAT inside global IP</member>
                   </destination>
                   <service>any</service>
                   <description>translation for dc1 backup from home backup server</description>
+                  <to-interface>ethernet1/3</to-interface>
+                </entry>
+                <entry name="Nat for dc2 backup" uuid="e25c8c07-efc8-4369-b630-6613d58c6751">
+                  <destination-translation>
+                    <translated-address>DC2</translated-address>
+                  </destination-translation>
+                  <to>
+                    <member>backup</member>
+                  </to>
+                  <from>
+                    <member>backup</member>
+                  </from>
+                  <source>
+                    <member>Home network global IP net</member>
+                  </source>
+                  <destination>
+                    <member>dc2 NAT inside global IP</member>
+                  </destination>
+                  <service>any</service>
                   <to-interface>ethernet1/3</to-interface>
                 </entry>
               </rules>
@@ -1082,11 +1102,14 @@
                 <member>backup</member>
               </tag>
             </entry>
-            <entry name="dc1 source NAT IP">
+            <entry name="dc1 NAT inside global IP">
               <ip-netmask>172.31.254.130/32</ip-netmask>
             </entry>
-            <entry name="Home network source NAT">
+            <entry name="Home network global IP net">
               <ip-netmask>172.31.254.0/25</ip-netmask>
+            </entry>
+            <entry name="dc2 NAT inside global IP">
+              <ip-netmask>172.31.254.131/32</ip-netmask>
             </entry>
           </address>
           <address-group>
@@ -1102,7 +1125,7 @@
             </entry>
             <entry name="backup-targets">
               <static>
-                <member>dc1 source NAT IP</member>
+                <member>dc1 NAT inside global IP</member>
               </static>
               <description>Source NAT IPs for backup</description>
             </entry>

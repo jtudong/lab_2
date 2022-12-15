@@ -1,683 +1,377 @@
-config {
-  shared {
-    application;
-    application-group;
-    service;
-    service-group;
-    botnet {
-      configuration {
-        http {
-          dynamic-dns {
-            enabled yes;
-            threshold 5;
-          }
-          malware-sites {
-            enabled yes;
-            threshold 5;
-          }
-          recent-domains {
-            enabled yes;
-            threshold 5;
-          }
-          ip-domains {
-            enabled yes;
-            threshold 10;
-          }
-          executables-from-unknown-sites {
-            enabled yes;
-            threshold 5;
-          }
-        }
-        other-applications {
-          irc yes;
-        }
-        unknown-applications {
-          unknown-tcp {
-            destinations-per-hour 10;
-            sessions-per-hour 10;
-            session-length {
-              maximum-bytes 100;
-              minimum-bytes 50;
-            }
-          }
-          unknown-udp {
-            destinations-per-hour 10;
-            sessions-per-hour 10;
-            session-length {
-              maximum-bytes 100;
-              minimum-bytes 50;
-            }
-          }
-        }
-      }
-      report {
-        topn 100;
-        scheduled yes;
-      }
-    }
-  }
-  devices {
-    localhost.localdomain {
-      network {
-        interface {
-          ethernet {
-            ethernet1/1 {
-              layer3 {
-                ndp-proxy {
-                  enabled no;
-                }
-                sdwan-link-settings {
-                  upstream-nat {
-                    enable no;
-                    static-ip;
-                  }
-                  enable no;
-                }
-                ip {
-                  10.1.254.2/30;
-                }
-                lldp {
-                  enable yes;
-                  profile default;
-                }
-                interface-management-profile ping;
-              }
-              comment corpInet01-e0-1;
-            }
-            ethernet1/2 {
-              layer3 {
-                ndp-proxy {
-                  enabled no;
-                }
-                sdwan-link-settings {
-                  upstream-nat {
-                    enable no;
-                    static-ip;
-                  }
-                  enable no;
-                }
-                lldp {
-                  enable yes;
-                  profile default;
-                }
-                ip {
-                  10.1.1.4/24;
-                }
-                interface-management-profile https-ssh-ping-snmp;
-              }
-            }
-          }
-        }
-        profiles {
-          monitor-profile {
-            default {
-              interval 3;
-              threshold 5;
-              action wait-recover;
-            }
-          }
-          lldp-profile {
-            default {
-              option-tlvs {
-                management-address {
-                  enabled no;
-                }
-                port-description yes;
-                system-name yes;
-                system-description yes;
-              }
-            }
-          }
-          interface-management-profile {
-            ping {
-              ping yes;
-            }
-            https-ssh-ping-snmp {
-              https yes;
-              ssh yes;
-              snmp yes;
-              ping yes;
-            }
-          }
-        }
-        ike {
-          crypto-profiles {
-            ike-crypto-profiles {
-              default {
-                encryption [ aes-128-cbc 3des];
-                hash sha1;
-                dh-group group2;
-                lifetime {
-                  hours 8;
-                }
-              }
-              Suite-B-GCM-128 {
-                encryption aes-128-cbc;
-                hash sha256;
-                dh-group group19;
-                lifetime {
-                  hours 8;
-                }
-              }
-              Suite-B-GCM-256 {
-                encryption aes-256-cbc;
-                hash sha384;
-                dh-group group20;
-                lifetime {
-                  hours 8;
-                }
-              }
-            }
-            ipsec-crypto-profiles {
-              default {
-                esp {
-                  encryption [ aes-128-cbc 3des];
-                  authentication sha1;
-                }
-                dh-group group2;
-                lifetime {
-                  hours 1;
-                }
-              }
-              Suite-B-GCM-128 {
-                esp {
-                  encryption aes-128-gcm;
-                  authentication none;
-                }
-                dh-group group19;
-                lifetime {
-                  hours 1;
-                }
-              }
-              Suite-B-GCM-256 {
-                esp {
-                  encryption aes-256-gcm;
-                  authentication none;
-                }
-                dh-group group20;
-                lifetime {
-                  hours 1;
-                }
-              }
-            }
-            global-protect-app-crypto-profiles {
-              default {
-                encryption aes-128-cbc;
-                authentication sha1;
-              }
-            }
-          }
-        }
-        qos {
-          profile {
-            default {
-              class-bandwidth-type {
-                mbps {
-                  class {
-                    class1 {
-                      priority real-time;
-                    }
-                    class2 {
-                      priority high;
-                    }
-                    class3 {
-                      priority high;
-                    }
-                    class4 {
-                      priority medium;
-                    }
-                    class5 {
-                      priority medium;
-                    }
-                    class6 {
-                      priority low;
-                    }
-                    class7 {
-                      priority low;
-                    }
-                    class8 {
-                      priority low;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        virtual-router {
-          default {
-            protocol {
-              bgp {
-                enable no;
-                dampening-profile {
-                  default {
-                    cutoff 1.25;
-                    reuse 0.5;
-                    max-hold-time 900;
-                    decay-half-life-reachable 300;
-                    decay-half-life-unreachable 900;
-                    enable yes;
-                  }
-                }
-                routing-options {
-                  graceful-restart {
-                    enable yes;
-                  }
-                }
-              }
-              rip {
-                enable no;
-              }
-              ospf {
-                enable yes;
-                area {
-                  0.0.0.0 {
-                    type {
-                      normal;
-                    }
-                    interface {
-                      ethernet1/1 {
-                        bfd {
-                          profile Inherit-vr-global-setting;
-                        }
-                        enable yes;
-                        passive no;
-                        gr-delay 10;
-                        metric 10;
-                        priority 1;
-                        hello-interval 10;
-                        dead-counts 4;
-                        retransmit-interval 5;
-                        transit-delay 1;
-                        link-type {
-                          broadcast;
-                        }
-                      }
-                      ethernet1/2 {
-                        bfd {
-                          profile Inherit-vr-global-setting;
-                        }
-                        enable yes;
-                        passive no;
-                        gr-delay 10;
-                        metric 10;
-                        priority 1;
-                        hello-interval 10;
-                        dead-counts 4;
-                        retransmit-interval 5;
-                        transit-delay 1;
-                        link-type {
-                          broadcast;
-                        }
-                      }
-                    }
-                  }
-                }
-                router-id 10.1.1.4;
-                reject-default-route no;
-              }
-              ospfv3 {
-                enable no;
-              }
-            }
-            interface [ ethernet1/1 ethernet1/2];
-            ecmp {
-              algorithm {
-                ip-modulo;
-              }
-            }
-          }
-        }
-        lldp {
-          enable yes;
-        }
-      }
-      deviceconfig {
-        system {
-          type {
-            static;
-          }
-          update-server updates.paloaltonetworks.com;
-          update-schedule {
-            threats {
-              recurring {
-                every-30-mins {
-                  at 18;
-                  action download-and-install;
-                }
-              }
-            }
-            anti-virus {
-              recurring {
-                hourly {
-                  at 5;
-                  action download-and-install;
-                }
-              }
-            }
-            wildfire {
-              recurring {
-                every-15-mins {
-                  at 5;
-                  action download-and-install;
-                }
-              }
-            }
-          }
-          timezone America/Phoenix;
-          service {
-            disable-telnet yes;
-            disable-http yes;
-          }
-          hostname corpFw1;
-          ip-address 172.31.255.9;
-          netmask 255.255.255.0;
-          default-gateway 172.31.255.100;
-          dns-setting {
-            servers {
-              primary 4.2.2.1;
-              secondary 208.67.222.222;
-            }
-          }
-          route {
-            service {
-              dns {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              ldap {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              netflow {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              panorama {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              snmp {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              syslog {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-              tacplus {
-                source {
-                  address 10.1.1.4/24;
-                  interface ethernet1/2;
-                }
-              }
-            }
-          }
-          domain company.pri;
-          snmp-setting {
-            snmp-system {
-              location lab2;
-            }
-          }
-          motd-and-banner {
-            banner-header corpFw1;
-            banner-header-color color6;
-            banner-header-text-color color14;
-            banner-header-footer-match no;
-          }
-          ntp-servers {
-            primary-ntp-server {
-              ntp-server-address time1.google.com;
-              authentication-type {
-                none;
-              }
-            }
-            secondary-ntp-server {
-              ntp-server-address time2.google.com;
-              authentication-type {
-                none;
-              }
-            }
-          }
-          device-telemetry {
-            threat-prevention no;
-            device-health-performance no;
-            product-usage no;
-          }
-        }
-        setting {
-          config {
-            rematch yes;
-          }
-          management {
-            hostname-type-in-syslog FQDN;
-          }
-          auto-mac-detect yes;
-        }
-      }
-      vsys {
-        vsys1 {
-          application;
-          application-group;
-          zone {
-            outside {
-              network {
-                layer3 ethernet1/1;
-              }
-            }
-            inside {
-              network {
-                layer3 ethernet1/2;
-              }
-            }
-          }
-          service;
-          service-group;
-          schedule;
-          rulebase {
-            security {
-              rules {
-                "permit core1 ip sla to isp1" f99005e6-c6d8-43da-83ec-9467a067dd5a {
-                  to outside;
-                  from inside;
-                  source 10.1.1.2;
-                  destination ISP1-e0-1-1;
-                  source-user any;
-                  category any;
-                  application any;
-                  service any;
-                  source-hip any;
-                  destination-hip any;
-                  action allow;
-                  rule-type interzone;
-                  disabled no;
-                }
-                "permit all internet" a32ddc07-c46a-43c1-9229-889e7ed78a46 {
-                  to outside;
-                  from inside;
-                  source any;
-                  destination any;
-                  source-user any;
-                  category any;
-                  application any;
-                  service application-default;
-                  source-hip any;
-                  destination-hip any;
-                  action allow;
-                }
-                "permit dns" 429ae1ab-1b2b-4749-8ea0-e41f1a9c93ee {
-                  to inside;
-                  from inside;
-                  source any;
-                  destination [ DC1 DC2];
-                  source-user any;
-                  category any;
-                  application dns;
-                  service application-default;
-                  source-hip any;
-                  destination-hip any;
-                  action allow;
-                  rule-type intrazone;
-                }
-                "Permit OSPF" ac20d30e-d2f1-43ab-9bca-9f50b84125bc {
-                  to [ inside outside];
-                  from [ inside outside];
-                  source any;
-                  destination any;
-                  source-user any;
-                  category any;
-                  application [ ospf ospfigp];
-                  service application-default;
-                  source-hip any;
-                  destination-hip any;
-                  action allow;
-                  rule-type intrazone;
-                }
-                "Permit ldap" 6ebe3640-c556-43da-b2d0-bcfcc7c6dda3 {
-                  to inside;
-                  from inside;
-                  source any;
-                  destination any;
-                  source-user any;
-                  category any;
-                  application ldap;
-                  service application-default;
-                  source-hip any;
-                  destination-hip any;
-                  action allow;
-                  rule-type intrazone;
-                }
-              }
-            }
-            nat {
-              rules {
-                "PAT for security subnet" 000b03bc-0693-4017-95b8-8ba6fa7a41b5 {
-                  source-translation {
-                    dynamic-ip-and-port {
-                      translated-address 100.64.1.1;
-                    }
-                  }
-                  to outside;
-                  from inside;
-                  source vlan-4-security;
-                  destination any;
-                  service any;
-                }
-                "PAT for servers" 44e1e004-acdc-47de-92ff-a55ebdb1d996 {
-                  source-translation {
-                    dynamic-ip-and-port {
-                      translated-address 100.64.1.2;
-                    }
-                  }
-                  to outside;
-                  from inside;
-                  source nat-group-servers;
-                  destination any;
-                  service any;
-                }
-                "PAT for users" 853d24ae-5739-43fb-bc32-d03d29f40b1e {
-                  source-translation {
-                    dynamic-ip-and-port {
-                      translated-address 100.64.1.3;
-                    }
-                  }
-                  to outside;
-                  from inside;
-                  source nat-group-users;
-                  destination any;
-                  service any;
-                }
-                "PAT for management" ffc8669a-8646-481e-8798-ee96b291465d {
-                  source-translation {
-                    dynamic-ip-and-port {
-                      translated-address 100.64.1.4;
-                    }
-                  }
-                  to outside;
-                  from inside;
-                  source vlan-7-management;
-                  destination any;
-                  service any;
-                }
-              }
-            }
-            default-security-rules {
-              rules {
-                intrazone-default 6b8508fd-570d-4ed7-956b-4094e951fde1 {
-                  action drop;
-                  log-start yes;
-                  log-end no;
-                }
-                interzone-default bc52e405-6e68-44e0-9042-903d20535535 {
-                  action deny;
-                  log-start yes;
-                  log-end no;
-                }
-              }
-            }
-          }
-          import {
-            network {
-              interface [ ethernet1/1 ethernet1/2];
-            }
-          }
-          address {
-            corpInet01-e0-1 {
-              ip-netmask 10.1.254.1/32;
-            }
-            vlan-4-security {
-              ip-netmask 10.1.1.0/24;
-              description "security devices";
-            }
-            vlan-5-servers {
-              ip-netmask 10.1.2.0/24;
-            }
-            vlan-6-users1 {
-              ip-netmask 10.1.3.0/24;
-            }
-            vlan-7-management {
-              ip-netmask 10.1.4.0/24;
-            }
-            ISP1-e0-1-1 {
-              ip-netmask 172.16.1.1/32;
-            }
-            DC1 {
-              ip-netmask 10.1.2.10;
-            }
-            DC2 {
-              ip-netmask 10.1.2.100;
-            }
-          }
-          address-group {
-            nat-group-servers {
-              static vlan-5-servers;
-            }
-            nat-group-users {
-              static vlan-6-users1;
-            }
-          }
-          tag {
-            inside {
-              color color2;
-            }
-            outside {
-              color color1;
-            }
-          }
-        }
-      }
-    }
-  }
-}
+set deviceconfig system type static 
+set deviceconfig system update-server updates.paloaltonetworks.com
+set deviceconfig system update-schedule threats recurring every-30-mins at 18
+set deviceconfig system update-schedule threats recurring every-30-mins action download-and-install
+set deviceconfig system update-schedule anti-virus recurring hourly at 5
+set deviceconfig system update-schedule anti-virus recurring hourly action download-and-install
+set deviceconfig system update-schedule wildfire recurring every-15-mins at 5
+set deviceconfig system update-schedule wildfire recurring every-15-mins action download-and-install
+set deviceconfig system timezone America/Phoenix
+set deviceconfig system service disable-telnet yes
+set deviceconfig system service disable-http yes
+set deviceconfig system hostname corpFw1
+set deviceconfig system ip-address 172.31.255.9
+set deviceconfig system netmask 255.255.255.0
+set deviceconfig system default-gateway 172.31.255.100
+set deviceconfig system dns-setting servers primary 4.2.2.1
+set deviceconfig system dns-setting servers secondary 208.67.222.222
+set deviceconfig system route service dns source address 10.1.1.4/24
+set deviceconfig system route service dns source interface ethernet1/2
+set deviceconfig system route service ldap source address 10.1.1.4/24
+set deviceconfig system route service ldap source interface ethernet1/2
+set deviceconfig system route service netflow source address 10.1.1.4/24
+set deviceconfig system route service netflow source interface ethernet1/2
+set deviceconfig system route service panorama source address 10.1.1.4/24
+set deviceconfig system route service panorama source interface ethernet1/2
+set deviceconfig system route service snmp source address 10.1.1.4/24
+set deviceconfig system route service snmp source interface ethernet1/2
+set deviceconfig system route service syslog source address 10.1.1.4/24
+set deviceconfig system route service syslog source interface ethernet1/2
+set deviceconfig system route service tacplus source address 10.1.1.4/24
+set deviceconfig system route service tacplus source interface ethernet1/2
+set deviceconfig system domain company.pri
+set deviceconfig system snmp-setting access-setting version v2c snmp-community-string company.read
+set deviceconfig system snmp-setting snmp-system location lab2
+set deviceconfig system motd-and-banner banner-header corpFw1
+set deviceconfig system motd-and-banner banner-header-color color6
+set deviceconfig system motd-and-banner banner-header-text-color color14
+set deviceconfig system motd-and-banner banner-header-footer-match no
+set deviceconfig system ntp-servers primary-ntp-server ntp-server-address time1.google.com
+set deviceconfig system ntp-servers primary-ntp-server authentication-type none 
+set deviceconfig system ntp-servers secondary-ntp-server ntp-server-address time2.google.com
+set deviceconfig system ntp-servers secondary-ntp-server authentication-type none 
+set deviceconfig system device-telemetry threat-prevention no
+set deviceconfig system device-telemetry device-health-performance no
+set deviceconfig system device-telemetry product-usage no
+set deviceconfig setting config rematch yes
+set deviceconfig setting management hostname-type-in-syslog FQDN
+set deviceconfig setting auto-mac-detect yes
+set network interface ethernet ethernet1/1 layer3 ndp-proxy enabled no
+set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat enable no
+set network interface ethernet ethernet1/1 layer3 sdwan-link-settings upstream-nat static-ip 
+set network interface ethernet ethernet1/1 layer3 sdwan-link-settings enable no
+set network interface ethernet ethernet1/1 layer3 ip 10.1.254.2/30 
+set network interface ethernet ethernet1/1 layer3 lldp enable yes
+set network interface ethernet ethernet1/1 layer3 lldp profile default
+set network interface ethernet ethernet1/1 layer3 interface-management-profile ping
+set network interface ethernet ethernet1/1 comment corpInet01-e0-1
+set network interface ethernet ethernet1/2 layer3 ndp-proxy enabled no
+set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat enable no
+set network interface ethernet ethernet1/2 layer3 sdwan-link-settings upstream-nat static-ip 
+set network interface ethernet ethernet1/2 layer3 sdwan-link-settings enable no
+set network interface ethernet ethernet1/2 layer3 lldp enable yes
+set network interface ethernet ethernet1/2 layer3 lldp profile default
+set network interface ethernet ethernet1/2 layer3 ip 10.1.1.4/24 
+set network interface ethernet ethernet1/2 layer3 interface-management-profile https-ssh-ping-snmp
+set network interface ethernet ethernet1/3 layer3 ndp-proxy enabled no
+set network interface ethernet ethernet1/3 layer3 sdwan-link-settings upstream-nat enable no
+set network interface ethernet ethernet1/3 layer3 sdwan-link-settings upstream-nat static-ip 
+set network interface ethernet ethernet1/3 layer3 sdwan-link-settings enable no
+set network interface ethernet ethernet1/3 layer3 ip 172.31.255.109/24 
+set network interface ethernet ethernet1/3 layer3 ip "dc1 NAT inside global IP" 
+set network interface ethernet ethernet1/3 layer3 ip "dc2 NAT inside global IP" 
+set network interface ethernet ethernet1/3 layer3 lldp enable no
+set network interface ethernet ethernet1/3 layer3 interface-management-profile ping
+set network interface ethernet ethernet1/3 comment "outside backup server access to lab servers"
+set network interface loopback units 
+set network profiles monitor-profile default interval 3
+set network profiles monitor-profile default threshold 5
+set network profiles monitor-profile default action wait-recover
+set network profiles lldp-profile default option-tlvs management-address enabled no
+set network profiles lldp-profile default option-tlvs port-description yes
+set network profiles lldp-profile default option-tlvs system-name yes
+set network profiles lldp-profile default option-tlvs system-description yes
+set network profiles interface-management-profile ping ping yes
+set network profiles interface-management-profile https-ssh-ping-snmp https yes
+set network profiles interface-management-profile https-ssh-ping-snmp ssh yes
+set network profiles interface-management-profile https-ssh-ping-snmp snmp yes
+set network profiles interface-management-profile https-ssh-ping-snmp ping yes
+set network ike crypto-profiles ike-crypto-profiles default encryption [ aes-128-cbc 3des ]
+set network ike crypto-profiles ike-crypto-profiles default hash sha1
+set network ike crypto-profiles ike-crypto-profiles default dh-group group2
+set network ike crypto-profiles ike-crypto-profiles default lifetime hours 8
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 encryption aes-128-cbc
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 hash sha256
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 dh-group group19
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-128 lifetime hours 8
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 encryption aes-256-cbc
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 hash sha384
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 dh-group group20
+set network ike crypto-profiles ike-crypto-profiles Suite-B-GCM-256 lifetime hours 8
+set network ike crypto-profiles ipsec-crypto-profiles default esp encryption [ aes-128-cbc 3des ]
+set network ike crypto-profiles ipsec-crypto-profiles default esp authentication sha1
+set network ike crypto-profiles ipsec-crypto-profiles default dh-group group2
+set network ike crypto-profiles ipsec-crypto-profiles default lifetime hours 1
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 esp encryption aes-128-gcm
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 esp authentication none
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 dh-group group19
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-128 lifetime hours 1
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 esp encryption aes-256-gcm
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 esp authentication none
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 dh-group group20
+set network ike crypto-profiles ipsec-crypto-profiles Suite-B-GCM-256 lifetime hours 1
+set network ike crypto-profiles global-protect-app-crypto-profiles default encryption aes-128-cbc
+set network ike crypto-profiles global-protect-app-crypto-profiles default authentication sha1
+set network qos profile default class-bandwidth-type mbps class class1 priority real-time
+set network qos profile default class-bandwidth-type mbps class class2 priority high
+set network qos profile default class-bandwidth-type mbps class class3 priority high
+set network qos profile default class-bandwidth-type mbps class class4 priority medium
+set network qos profile default class-bandwidth-type mbps class class5 priority medium
+set network qos profile default class-bandwidth-type mbps class class6 priority low
+set network qos profile default class-bandwidth-type mbps class class7 priority low
+set network qos profile default class-bandwidth-type mbps class class8 priority low
+set network virtual-router default protocol bgp enable no
+set network virtual-router default protocol bgp dampening-profile default cutoff 1.25
+set network virtual-router default protocol bgp dampening-profile default reuse 0.5
+set network virtual-router default protocol bgp dampening-profile default max-hold-time 900
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-reachable 300
+set network virtual-router default protocol bgp dampening-profile default decay-half-life-unreachable 900
+set network virtual-router default protocol bgp dampening-profile default enable yes
+set network virtual-router default protocol bgp routing-options graceful-restart enable yes
+set network virtual-router default protocol rip enable no
+set network virtual-router default protocol ospf enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 type normal 
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 passive no
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 gr-delay 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 metric 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 priority 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 hello-interval 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 dead-counts 4
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 retransmit-interval 5
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 transit-delay 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/1 link-type broadcast 
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 bfd profile Inherit-vr-global-setting
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 enable yes
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 passive no
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 gr-delay 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 metric 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 priority 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 hello-interval 10
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 dead-counts 4
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 retransmit-interval 5
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 transit-delay 1
+set network virtual-router default protocol ospf area 0.0.0.0 interface ethernet1/2 link-type broadcast 
+set network virtual-router default protocol ospf router-id 10.1.1.4
+set network virtual-router default protocol ospf reject-default-route no
+set network virtual-router default protocol ospfv3 enable no
+set network virtual-router default interface [ ethernet1/1 ethernet1/2 ethernet1/3 ]
+set network virtual-router default ecmp algorithm ip-modulo 
+set network virtual-router default routing-table ip static-route "backup servers" path-monitor enable no
+set network virtual-router default routing-table ip static-route "backup servers" path-monitor failure-condition any
+set network virtual-router default routing-table ip static-route "backup servers" path-monitor hold-time 2
+set network virtual-router default routing-table ip static-route "backup servers" nexthop ip-address 172.31.255.100
+set network virtual-router default routing-table ip static-route "backup servers" bfd profile None
+set network virtual-router default routing-table ip static-route "backup servers" interface ethernet1/3
+set network virtual-router default routing-table ip static-route "backup servers" metric 10
+set network virtual-router default routing-table ip static-route "backup servers" admin-dist 240
+set network virtual-router default routing-table ip static-route "backup servers" destination 172.31.254.0/25
+set network virtual-router default routing-table ip static-route "backup servers" route-table unicast 
+set network lldp enable yes
+set shared application 
+set shared application-group 
+set shared service 
+set shared service-group 
+set shared botnet configuration http dynamic-dns enabled yes
+set shared botnet configuration http dynamic-dns threshold 5
+set shared botnet configuration http malware-sites enabled yes
+set shared botnet configuration http malware-sites threshold 5
+set shared botnet configuration http recent-domains enabled yes
+set shared botnet configuration http recent-domains threshold 5
+set shared botnet configuration http ip-domains enabled yes
+set shared botnet configuration http ip-domains threshold 10
+set shared botnet configuration http executables-from-unknown-sites enabled yes
+set shared botnet configuration http executables-from-unknown-sites threshold 5
+set shared botnet configuration other-applications irc yes
+set shared botnet configuration unknown-applications unknown-tcp destinations-per-hour 10
+set shared botnet configuration unknown-applications unknown-tcp sessions-per-hour 10
+set shared botnet configuration unknown-applications unknown-tcp session-length maximum-bytes 100
+set shared botnet configuration unknown-applications unknown-tcp session-length minimum-bytes 50
+set shared botnet configuration unknown-applications unknown-udp destinations-per-hour 10
+set shared botnet configuration unknown-applications unknown-udp sessions-per-hour 10
+set shared botnet configuration unknown-applications unknown-udp session-length maximum-bytes 100
+set shared botnet configuration unknown-applications unknown-udp session-length minimum-bytes 50
+set shared botnet report topn 100
+set shared botnet report scheduled yes
+set shared server-profile ldap company-AD server dc1 address 10.1.2.10
+set shared server-profile ldap company-AD server dc1 port 389
+set shared server-profile ldap company-AD bind-dn svc_palo
+set shared server-profile ldap company-AD bind-password -AQ==2QNTm8FEFWcciTEa4V0q5J3A6JM=c4o+FW15a1ZDqoEiux4L3Q==
+set shared server-profile ldap company-AD ssl no
+set shared server-profile ldap company-AD ldap-type active-directory
+set shared server-profile ldap company-AD base DC=company,DC=pri
+set shared authentication-profile ldap method ldap server-profile company-AD
+set shared authentication-profile ldap method ldap login-attribute sAMAccountName
+set shared authentication-profile ldap multi-factor-auth mfa-enable no
+set shared authentication-profile ldap allow-list all
+set shared authentication-profile ldap user-domain company.pri
+set shared authentication-sequence 
+set zone outside network layer3 ethernet1/1
+set zone inside network layer3 ethernet1/2
+set zone backup network layer3 ethernet1/3
+set tag inside color color2
+set tag outside color color1
+set tag backup color color3
+set service-group 
+set service 
+set schedule 
+set rulebase security rules "permit core1 ip sla to isp1" to outside
+set rulebase security rules "permit core1 ip sla to isp1" from inside
+set rulebase security rules "permit core1 ip sla to isp1" source 10.1.1.2
+set rulebase security rules "permit core1 ip sla to isp1" destination ISP1-e0-1-1
+set rulebase security rules "permit core1 ip sla to isp1" source-user any
+set rulebase security rules "permit core1 ip sla to isp1" category any
+set rulebase security rules "permit core1 ip sla to isp1" application any
+set rulebase security rules "permit core1 ip sla to isp1" service any
+set rulebase security rules "permit core1 ip sla to isp1" source-hip any
+set rulebase security rules "permit core1 ip sla to isp1" destination-hip any
+set rulebase security rules "permit core1 ip sla to isp1" action allow
+set rulebase security rules "permit core1 ip sla to isp1" rule-type interzone
+set rulebase security rules "permit core1 ip sla to isp1" disabled no
+set rulebase security rules "permit all internet" to outside
+set rulebase security rules "permit all internet" from inside
+set rulebase security rules "permit all internet" source any
+set rulebase security rules "permit all internet" destination any
+set rulebase security rules "permit all internet" source-user any
+set rulebase security rules "permit all internet" category any
+set rulebase security rules "permit all internet" application any
+set rulebase security rules "permit all internet" service application-default
+set rulebase security rules "permit all internet" source-hip any
+set rulebase security rules "permit all internet" destination-hip any
+set rulebase security rules "permit all internet" action allow
+set rulebase security rules "permit dns" to inside
+set rulebase security rules "permit dns" from inside
+set rulebase security rules "permit dns" source any
+set rulebase security rules "permit dns" destination [ DC1 DC2 ]
+set rulebase security rules "permit dns" source-user any
+set rulebase security rules "permit dns" category any
+set rulebase security rules "permit dns" application dns
+set rulebase security rules "permit dns" service application-default
+set rulebase security rules "permit dns" source-hip any
+set rulebase security rules "permit dns" destination-hip any
+set rulebase security rules "permit dns" action allow
+set rulebase security rules "permit dns" rule-type intrazone
+set rulebase security rules "Permit OSPF" to [ inside outside ]
+set rulebase security rules "Permit OSPF" from [ inside outside ]
+set rulebase security rules "Permit OSPF" source any
+set rulebase security rules "Permit OSPF" destination any
+set rulebase security rules "Permit OSPF" source-user any
+set rulebase security rules "Permit OSPF" category any
+set rulebase security rules "Permit OSPF" application [ ospf ospfigp ]
+set rulebase security rules "Permit OSPF" service application-default
+set rulebase security rules "Permit OSPF" source-hip any
+set rulebase security rules "Permit OSPF" destination-hip any
+set rulebase security rules "Permit OSPF" action allow
+set rulebase security rules "Permit OSPF" rule-type intrazone
+set rulebase security rules "Permit ldap" to inside
+set rulebase security rules "Permit ldap" from inside
+set rulebase security rules "Permit ldap" source any
+set rulebase security rules "Permit ldap" destination any
+set rulebase security rules "Permit ldap" source-user any
+set rulebase security rules "Permit ldap" category any
+set rulebase security rules "Permit ldap" application ldap
+set rulebase security rules "Permit ldap" service application-default
+set rulebase security rules "Permit ldap" source-hip any
+set rulebase security rules "Permit ldap" destination-hip any
+set rulebase security rules "Permit ldap" action allow
+set rulebase security rules "Permit ldap" rule-type intrazone
+set rulebase security rules "Permit ping on backup net" to backup
+set rulebase security rules "Permit ping on backup net" from backup
+set rulebase security rules "Permit ping on backup net" source any
+set rulebase security rules "Permit ping on backup net" destination 172.31.255.109
+set rulebase security rules "Permit ping on backup net" source-user any
+set rulebase security rules "Permit ping on backup net" category any
+set rulebase security rules "Permit ping on backup net" application ping
+set rulebase security rules "Permit ping on backup net" service application-default
+set rulebase security rules "Permit ping on backup net" source-hip any
+set rulebase security rules "Permit ping on backup net" destination-hip any
+set rulebase security rules "Permit ping on backup net" action allow
+set rulebase security rules "Permit ping on backup net" rule-type universal
+set rulebase security rules "Permit backup" to inside
+set rulebase security rules "Permit backup" from backup
+set rulebase security rules "Permit backup" source any
+set rulebase security rules "Permit backup" destination any
+set rulebase security rules "Permit backup" source-user any
+set rulebase security rules "Permit backup" category any
+set rulebase security rules "Permit backup" application any
+set rulebase security rules "Permit backup" service any
+set rulebase security rules "Permit backup" source-hip any
+set rulebase security rules "Permit backup" destination-hip any
+set rulebase security rules "Permit backup" tag backup
+set rulebase security rules "Permit backup" action allow
+set rulebase security rules "Permit backup" description "traffic from home net (192.168.1.0/24) via Management router NATted to 172.31.255.2xx"
+set rulebase nat rules "PAT for security subnet" source-translation dynamic-ip-and-port translated-address 100.64.1.1
+set rulebase nat rules "PAT for security subnet" to outside
+set rulebase nat rules "PAT for security subnet" from inside
+set rulebase nat rules "PAT for security subnet" source vlan-4-security
+set rulebase nat rules "PAT for security subnet" destination any
+set rulebase nat rules "PAT for security subnet" service any
+set rulebase nat rules "PAT for servers" source-translation dynamic-ip-and-port translated-address 100.64.1.2
+set rulebase nat rules "PAT for servers" to outside
+set rulebase nat rules "PAT for servers" from inside
+set rulebase nat rules "PAT for servers" source nat-group-servers
+set rulebase nat rules "PAT for servers" destination any
+set rulebase nat rules "PAT for servers" service any
+set rulebase nat rules "PAT for users" source-translation dynamic-ip-and-port translated-address 100.64.1.3
+set rulebase nat rules "PAT for users" to outside
+set rulebase nat rules "PAT for users" from inside
+set rulebase nat rules "PAT for users" source nat-group-users
+set rulebase nat rules "PAT for users" destination any
+set rulebase nat rules "PAT for users" service any
+set rulebase nat rules "PAT for management" source-translation dynamic-ip-and-port translated-address 100.64.1.4
+set rulebase nat rules "PAT for management" to outside
+set rulebase nat rules "PAT for management" from inside
+set rulebase nat rules "PAT for management" source vlan-7-management
+set rulebase nat rules "PAT for management" destination any
+set rulebase nat rules "PAT for management" service any
+set rulebase nat rules "Nat for dc1 backup" destination-translation translated-address DC1
+set rulebase nat rules "Nat for dc1 backup" to backup
+set rulebase nat rules "Nat for dc1 backup" from backup
+set rulebase nat rules "Nat for dc1 backup" source "Home network global IP net"
+set rulebase nat rules "Nat for dc1 backup" destination "dc1 NAT inside global IP"
+set rulebase nat rules "Nat for dc1 backup" service any
+set rulebase nat rules "Nat for dc1 backup" description "translation for dc1 backup from home backup server"
+set rulebase nat rules "Nat for dc1 backup" to-interface ethernet1/3
+set rulebase nat rules "Nat for dc2 backup" destination-translation translated-address DC2
+set rulebase nat rules "Nat for dc2 backup" to backup
+set rulebase nat rules "Nat for dc2 backup" from backup
+set rulebase nat rules "Nat for dc2 backup" source "Home network global IP net"
+set rulebase nat rules "Nat for dc2 backup" destination "dc2 NAT inside global IP"
+set rulebase nat rules "Nat for dc2 backup" service any
+set rulebase nat rules "Nat for dc2 backup" to-interface ethernet1/3
+set rulebase default-security-rules rules intrazone-default action drop
+set rulebase default-security-rules rules intrazone-default log-start yes
+set rulebase default-security-rules rules intrazone-default log-end no
+set rulebase default-security-rules rules interzone-default action deny
+set rulebase default-security-rules rules interzone-default log-start yes
+set rulebase default-security-rules rules interzone-default log-end no
+set import network interface [ ethernet1/1 ethernet1/2 ethernet1/3 ]
+set application-group 
+set application 
+set address-group nat-group-servers static vlan-5-servers
+set address-group nat-group-users static vlan-6-users1
+set address-group backup-targets static "dc1 NAT inside global IP"
+set address-group backup-targets description "Source NAT IPs for backup"
+set address corpInet01-e0-1 ip-netmask 10.1.254.1/32
+set address vlan-4-security ip-netmask 10.1.1.0/24
+set address vlan-4-security description "security devices"
+set address vlan-5-servers ip-netmask 10.1.2.0/24
+set address vlan-6-users1 ip-netmask 10.1.3.0/24
+set address vlan-7-management ip-netmask 10.1.4.0/24
+set address ISP1-e0-1-1 ip-netmask 172.16.1.1/32
+set address DC1 ip-netmask 10.1.2.10
+set address DC2 ip-netmask 10.1.2.11
+set address "Home Network" ip-netmask 192.168.1.0/24
+set address "Home Network" tag backup
+set address "dc1 NAT inside global IP" ip-netmask 172.31.254.130/32
+set address "Home network global IP net" ip-netmask 172.31.254.0/25
+set address "dc2 NAT inside global IP" ip-netmask 172.31.254.131/32
+set mgt-config users admin phash $5$psylnikx$H8dkxp1qG1josIaQjFf1zXngrSCRxPcATLlEz6cB2k1
+set mgt-config users admin permissions role-based superuser yes
+set mgt-config users jtadmin permissions role-based superuser yes
+set mgt-config users jtadmin authentication-profile ldap
+set mgt-config users lab permissions role-based superreader yes
+set mgt-config users lab phash $5$dhopgvox$SuNIJf4p3cPyuDNihYDCDl0ahF92dC1vyc2UIptsZ2/
+set mgt-config password-complexity enabled yes
+set mgt-config password-complexity minimum-length 3
