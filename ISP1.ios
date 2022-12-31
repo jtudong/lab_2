@@ -1,10 +1,7 @@
-Building configuration...
-
-  
-Current configuration : 2336 bytes
+Current configuration : 2338 bytes
 !
-! Last configuration change at 21:41:51 mst Wed Nov 2 2022 by lab
-! NVRAM config last updated at 21:41:52 mst Wed Nov 2 2022 by lab
+! Last configuration change at 22:07:19 mst Sun Dec 11 2022 by lab
+! NVRAM config last updated at 22:07:20 mst Sun Dec 11 2022 by lab
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -19,7 +16,9 @@ boot-end-marker
 !
 logging buffered 32768
 no logging console
+enable password cisco
 !
+no aaa new-model
 !
 !
 !
@@ -71,11 +70,13 @@ multilink bundle-name authenticated
 !
 !
 !
+username cisco privilege 15 password 0 cisco
+username lab privilege 15 password 0 lab
 !
 redundancy
 !
 !
-! 
+!
 !
 !
 !
@@ -132,6 +133,10 @@ ip ssh version 2
 !
 ipv6 ioam timestamp
 !
+snmp-server community company.read RO
+snmp-server ifindex persist
+snmp-server location Corp
+snmp-server chassis-id ISP1
 !
 !
 control-plane
@@ -158,4 +163,3 @@ ntp server time4.google.com
 ntp server time2.google.com
 !
 end
-

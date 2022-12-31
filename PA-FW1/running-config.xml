@@ -13,7 +13,7 @@
       <entry name="lab">
         <permissions>
           <role-based>
-            <superreader>yes</superreader>
+            <superuser>yes</superuser>
           </role-based>
         </permissions>
         <phash>$5$xkkpisgh$9rEx503yw2h22PQTXlR61CPq0ohVP.S1CXbmCFn1b5B</phash>
@@ -80,7 +80,6 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
-    <content-preview/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">

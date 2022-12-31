@@ -21,7 +21,7 @@
       <entry name="lab">
         <permissions>
           <role-based>
-            <superreader>yes</superreader>
+            <superuser>yes</superuser>
           </role-based>
         </permissions>
         <phash>$5$dhopgvox$SuNIJf4p3cPyuDNihYDCDl0ahF92dC1vyc2UIptsZ2/</phash>
