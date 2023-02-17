@@ -72,7 +72,6 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
-    <content-preview/>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
