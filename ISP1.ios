@@ -1,7 +1,7 @@
-Current configuration : 2172 bytes
+Current configuration : 2344 bytes
 !
-! Last configuration change at 19:24:53 MST Sun Feb 19 2023 by lab
-! NVRAM config last updated at 19:25:17 MST Sun Feb 19 2023 by lab
+! Last configuration change at 20:57:50 MST Mon Feb 20 2023 by lab
+! NVRAM config last updated at 20:58:28 MST Mon Feb 20 2023 by lab
 !
 version 15.7
 service timestamps debug datetime msec localtime show-timezone
@@ -52,9 +52,9 @@ ip vrf management
 !
 ip domain lookup source-interface Ethernet0/0
 ip domain name pnjnet.local
-ip name-server 192.168.10.1
+ip name-server 192.168.1.10
+ip name-server 192.168.1.1
 ip name-server 208.67.222.222
-ip name-server 4.2.2.2
 ip cef
 login on-failure log
 login on-success log
@@ -70,13 +70,22 @@ multilink bundle-name authenticated
 !
 !
 !
+archive
+ log config
+  logging enable
+  logging size 200
+  notify syslog contenttype plaintext
+ path unix:isp1
+ maximum 5
+ write-memory
 username lab privilege 15 password 0 lab
 username cisco privilege 15 password 0 cisco
 !
 redundancy
 !
+lldp run
 !
-!
+! 
 !
 !
 !
@@ -97,6 +106,7 @@ interface Ethernet0/0
  duplex auto
 !
 interface Ethernet0/1
+ description fw1 eth1/1
  ip address 100.64.0.1 255.255.255.252
  duplex auto
 !
