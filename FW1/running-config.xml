@@ -100,6 +100,50 @@
                 <interface-management-profile>https-ssh-ping</interface-management-profile>
               </layer3>
             </entry>
+            <entry name="ethernet1/2">
+              <layer3>
+                <ndp-proxy>
+                  <enabled>no</enabled>
+                </ndp-proxy>
+                <sdwan-link-settings>
+                  <upstream-nat>
+                    <enable>no</enable>
+                    <static-ip/>
+                  </upstream-nat>
+                  <enable>no</enable>
+                </sdwan-link-settings>
+                <lldp>
+                  <profile>LLDP-profile-1</profile>
+                  <enable>yes</enable>
+                </lldp>
+                <units>
+                  <entry name="ethernet1/2.100">
+                    <ipv6>
+                      <neighbor-discovery>
+                        <router-advertisement>
+                          <enable>no</enable>
+                        </router-advertisement>
+                      </neighbor-discovery>
+                    </ipv6>
+                    <ndp-proxy>
+                      <enabled>no</enabled>
+                    </ndp-proxy>
+                    <sdwan-link-settings>
+                      <enable>no</enable>
+                    </sdwan-link-settings>
+                    <adjust-tcp-mss>
+                      <enable>no</enable>
+                    </adjust-tcp-mss>
+                    <ip>
+                      <entry name="10.0.100.1/30"/>
+                    </ip>
+                    <interface-management-profile>https-ssh-ping</interface-management-profile>
+                    <tag>100</tag>
+                  </entry>
+                </units>
+              </layer3>
+              <link-state>auto</link-state>
+            </entry>
           </ethernet>
         </interface>
         <profiles>
@@ -372,39 +416,19 @@
             </protocol>
             <interface>
               <member>ethernet1/1</member>
+              <member>ethernet1/2</member>
+              <member>ethernet1/2.100</member>
             </interface>
             <ecmp>
               <algorithm>
                 <ip-modulo/>
               </algorithm>
             </ecmp>
-            <routing-table>
-              <ip>
-                <static-route>
-                  <entry name="default">
-                    <nexthop>
-                      <ip-address>100.64.0.1</ip-address>
-                    </nexthop>
-                    <bfd>
-                      <profile>None</profile>
-                    </bfd>
-                    <path-monitor>
-                      <enable>no</enable>
-                      <failure-condition>any</failure-condition>
-                      <hold-time>2</hold-time>
-                    </path-monitor>
-                    <interface>ethernet1/1</interface>
-                    <metric>65535</metric>
-                    <destination>0.0.0.0/0</destination>
-                    <route-table>
-                      <unicast/>
-                    </route-table>
-                  </entry>
-                </static-route>
-              </ip>
-            </routing-table>
           </entry>
         </virtual-router>
+        <lldp>
+          <enable>yes</enable>
+        </lldp>
       </network>
       <deviceconfig>
         <system>
@@ -444,9 +468,9 @@
             <disable-http>yes</disable-http>
           </service>
           <hostname>FW1</hostname>
-          <ip-address>192.168.10.21</ip-address>
+          <ip-address>192.168.1.34</ip-address>
           <netmask>255.255.255.0</netmask>
-          <default-gateway>192.168.10.1</default-gateway>
+          <default-gateway>192.168.1.1</default-gateway>
           <dns-setting>
             <servers>
               <primary>192.168.10.1</primary>
@@ -504,7 +528,10 @@
           <zone>
             <entry name="inside">
               <network>
-                <layer3/>
+                <layer3>
+                  <member>ethernet1/2</member>
+                  <member>ethernet1/2.100</member>
+                </layer3>
               </network>
             </entry>
             <entry name="outside">
@@ -650,6 +677,8 @@
             <network>
               <interface>
                 <member>ethernet1/1</member>
+                <member>ethernet1/2</member>
+                <member>ethernet1/2.100</member>
               </interface>
             </network>
           </import>
