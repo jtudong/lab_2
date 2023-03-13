@@ -1,6 +1,6 @@
-Current configuration : 2998 bytes
+Current configuration : 3577 bytes
 !
-! Last configuration change at 13:52:06 mst Sat Mar 11 2023
+! Last configuration change at 13:55:31 mst Sat Mar 11 2023
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -8,7 +8,7 @@ service timestamps log datetime msec localtime show-timezone
 no service password-encryption
 service compress-config
 !
-hostname IDS1
+hostname DCAggS1
 !
 boot-start-marker
 boot-end-marker
@@ -33,8 +33,8 @@ ip vrf management
 !
 !
 ip domain-name company.pri
-ip name-server 4.2.2.2
 ip name-server 208.67.222.222
+ip name-server 4.2.2.2
 ip cef
 login on-failure log
 login on-success log
@@ -46,17 +46,24 @@ archive
   logging enable
   logging size 200
   notify syslog contenttype plaintext
- path unix:IDS1-
+ path unix:DCAggS1-
  maximum 5
  write-memory
 !
 spanning-tree mode pvst
 spanning-tree extend system-id
-spanning-tree vlan 100 priority 24576
+spanning-tree vlan 2,10 priority 24576
+spanning-tree vlan 20 priority 28672
 !
 !
-vlan 100
- name internet
+vlan 2
+ name management_dc
+!
+vlan 10
+ name server_1
+!
+vlan 20
+ name DC-Users
 !
 !
 !
@@ -72,30 +79,29 @@ vlan 100
 !
 !
 interface Ethernet0/0
- description IAS1 e0/2
- switchport trunk encapsulation dot1q
- switchport mode trunk
+ description Core1 e0/2
+ no switchport
+ ip address 10.0.0.33 255.255.255.252
+ ip ospf 1 area 0.0.0.0
 !
 interface Ethernet0/1
- description IAS2 e0/2
- switchport trunk encapsulation dot1q
- switchport mode trunk
- shutdown
+ description Core2 e0/2
+ no switchport
+ ip address 10.0.0.37 255.255.255.252
+ ip ospf 1 area 0.0.0.0
 !
 interface Ethernet0/2
- description Core1 e0/0
- no switchport
- ip address 10.0.0.18 255.255.255.252
- ip ospf 1 area 0.0.0.0
+ description DCES1 e0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
 !
 interface Ethernet0/3
- description Core2 e0/0
- no switchport
- ip address 10.0.0.25 255.255.255.252
- ip ospf 1 area 0.0.0.0
+ description DCES2 e0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
 !
 interface Ethernet1/0
- description IDS2 e1/0
+ description DCAggS2 e1/0
  switchport trunk encapsulation dot1q
  switchport mode trunk
 !
@@ -106,26 +112,53 @@ interface Ethernet1/2
  shutdown
 !
 interface Ethernet1/3
+ shutdown
+!
+interface Ethernet2/0
+ shutdown
+!
+interface Ethernet2/1
+ shutdown
+!
+interface Ethernet2/2
+ shutdown
+!
+interface Ethernet2/3
  description management
  no switchport
  ip vrf forwarding management
- ip address 172.31.255.1 255.255.255.0
+ ip address 172.31.255.12 255.255.255.0
 !
-interface Vlan100
- description Internet
- ip address 10.0.0.2 255.255.255.240
+interface Vlan2
+ description management_dc
+ ip address 10.0.2.2 255.255.255.0
  ip ospf 1 area 0.0.0.0
- glbp 100 ip 10.0.0.1
- glbp 100 priority 110
- glbp 100 preempt delay minimum 120
- glbp 100 forwarder preempt delay minimum 120
+ glbp 20 ip 10.0.2.1
+ glbp 20 priority 110
+ glbp 20 preempt delay minimum 120
+ glbp 20 forwarder preempt delay minimum 120
+!
+interface Vlan10
+ description server_1
+ ip address 10.0.10.2 255.255.255.0
+ ip ospf 1 area 0.0.0.0
+ glbp 10 ip 10.0.10.1
+ glbp 10 priority 110
+ glbp 10 preempt delay minimum 120
+ glbp 10 forwarder preempt delay minimum 120
+!
+interface Vlan20
+ description DC-Users
+ ip address 10.0.20.2 255.255.255.0
+ ip helper-address 10.0.10.10
+ ip ospf 1 area 0.0.0.0
+ glbp 20 ip 10.0.20.1
 !
 router ospf 1
- router-id 192.0.2.1
+ router-id 192.0.2.12
  passive-interface default
- no passive-interface Ethernet0/2
- no passive-interface Ethernet0/3
- no passive-interface Vlan100
+ no passive-interface Ethernet0/0
+ no passive-interface Ethernet0/1
 !
 ip forward-protocol nd
 !
@@ -141,7 +174,7 @@ ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 !
 snmp-server community company.read RO
 snmp-server location Corp
-snmp-server chassis-id IDS1
+snmp-server chassis-id DCAggS1
 snmp ifmib ifindex persist
 !
 control-plane
