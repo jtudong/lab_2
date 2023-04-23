@@ -1,6 +1,6 @@
 Current configuration : 3415 bytes
 !
-! Last configuration change at 13:55:33 mst Sat Mar 11 2023
+! Last configuration change at 09:59:50 mst Sat Apr 22 2023
 !
 version 15.2
 service timestamps debug datetime msec localtime show-timezone
@@ -191,10 +191,11 @@ line vty 0 4
  transport output ssh
  escape-character BREAK
 !
-ntp server time3.google.com
 ntp server time1.google.com
-ntp server time2.google.com
+ntp server time3.google.com
 ntp server time4.google.com
+ntp server time2.google.com
 !
 !
 end
+

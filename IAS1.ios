@@ -1,13 +1,14 @@
-Current configuration : 2510 bytes
+Current configuration : 2439 bytes
 !
-! No configuration change since last restart
+! Last configuration change at 09:58:28 mst Sat Apr 22 2023
 !
-version 15.7
+version 15.2
 service timestamps debug datetime msec localtime show-timezone
 service timestamps log datetime msec localtime show-timezone
 no service password-encryption
+service compress-config
 !
-hostname ISP1
+hostname IAS1
 !
 boot-start-marker
 boot-end-marker
@@ -16,55 +17,28 @@ boot-end-marker
 logging buffered 32768
 enable password cisco
 !
+username lab privilege 15 password 0 lab
+username cisco privilege 15 password 0 cisco
 no aaa new-model
-!
-!
-!
-clock timezone MST -7 0
-mmi polling-interval 60
-no mmi auto-configure
-no mmi pvc
-mmi snmp-timeout 180
+clock timezone mst -7 0
 !
 !
 !
 !
 !
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-
-
+vtp mode off
 !
 ip vrf management
 !
 !
 !
-!
-ip domain lookup source-interface Ethernet0/0
-ip domain name pnjnet.local
+ip domain-name company.pri
+ip name-server 4.2.2.2
 ip name-server 208.67.222.222
-ip name-server 192.168.1.1
 ip cef
 login on-failure log
 login on-success log
 no ipv6 cef
-!
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-!
-!
 !
 !
 archive
@@ -72,14 +46,16 @@ archive
   logging enable
   logging size 200
   notify syslog contenttype plaintext
- path unix:ISP1-
+ path unix:IAS1-
  maximum 5
  write-memory
-username lab privilege 15 password 0 lab
-username cisco privilege 15 password 0 cisco
 !
-redundancy
+spanning-tree mode pvst
+spanning-tree extend system-id
 !
+!
+vlan 100
+ name internet
 lldp run
 !
 !
@@ -95,63 +71,63 @@ lldp run
 !
 !
 !
-interface Loopback0
- ip address 192.0.2.5 255.255.255.255
-!
 interface Ethernet0/0
- ip address 192.168.1.35 255.255.255.0
- ip nat outside
- ip virtual-reassembly in
- duplex auto
+ description FW1 eth1/2
+ switchport access vlan 100
+ switchport mode access
+ spanning-tree portfast edge
 !
 interface Ethernet0/1
- description fw1 eth1/1
- ip address 100.64.0.1 255.255.255.252
- ip nat inside
- ip virtual-reassembly in
- duplex auto
+ shutdown
 !
 interface Ethernet0/2
- no ip address
- shutdown
- duplex auto
+ description IDS1 e0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
 !
 interface Ethernet0/3
+ shutdown
+!
+interface Ethernet1/0
+ description IDS2 e0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/1
+ shutdown
+!
+interface Ethernet1/2
+ shutdown
+!
+interface Ethernet1/3
+ no switchport
  ip vrf forwarding management
- ip address 172.31.255.5 255.255.255.0
- duplex auto
+ ip address 172.31.255.9 255.255.255.0
 !
-router bgp 65001
- bgp log-neighbor-changes
- network 0.0.0.0
- neighbor 100.64.0.2 remote-as 65011
- neighbor 100.64.0.2 soft-reconfiguration inbound
+interface Vlan100
+ description Internet
+ ip address 10.0.0.6 255.255.255.240
 !
+ip default-gateway 10.0.0.1
 ip forward-protocol nd
-!
 !
 no ip http server
 no ip http secure-server
-ip nat inside source list 1 interface Ethernet0/0 overload
-ip route 0.0.0.0 0.0.0.0 192.168.1.1
-ip ssh version 2
 !
-ipv6 ioam timestamp
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
 !
 snmp-server community company.read RO
-snmp-server ifindex persist
 snmp-server location Corp
-snmp-server chassis-id ISP1
-!
-access-list 1 permit 100.64.0.0 0.0.0.255
+snmp-server chassis-id IAS1
+snmp ifmib ifindex persist
 !
 control-plane
-!
-!
-!
-!
-!
-!
 !
 !
 line con 0
@@ -160,21 +136,22 @@ line con 0
  privilege level 15
  logging synchronous
  login local
+ transport preferred none
 line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
 line vty 0 4
  exec-timeout 720 0
  logging synchronous
  login local
  transport preferred none
- transport input telnet ssh
+ transport input ssh
+ transport output ssh
  escape-character BREAK
 !
 ntp server time1.google.com
-ntp server time3.google.com
-ntp server 34.202.215.187 minpoll 10
-ntp server pool.ntp.org
-ntp server time2.google.com
-ntp server time4.google.com
+!
 !
 end
 

@@ -72,6 +72,27 @@
         <scheduled>yes</scheduled>
       </report>
     </botnet>
+    <server-profile>
+      <ldap>
+        <entry name="ldap_profile">
+          <server>
+            <entry name="dc1">
+              <address>10.0.10.10</address>
+              <port>389</port>
+            </entry>
+            <entry name="dc2">
+              <address>10.0.10.11</address>
+              <port>389</port>
+            </entry>
+          </server>
+          <ldap-type>active-directory</ldap-type>
+          <bind-dn>svc_ldap@company.pri</bind-dn>
+          <bind-password>-AQ==E3IBJ3pufeRKdFuAd+xxaAuM7Qk=PM8yGuEXJhllaJ1xZ2pFaQ==</bind-password>
+          <ssl>no</ssl>
+          <base>DC=company,DC=pri</base>
+        </entry>
+      </ldap>
+    </server-profile>
   </shared>
   <devices>
     <entry name="localhost.localdomain">
@@ -507,13 +528,13 @@
             <disable-http>yes</disable-http>
           </service>
           <hostname>FW1</hostname>
-          <ip-address>192.168.1.34</ip-address>
+          <ip-address>172.31.255.4</ip-address>
           <netmask>255.255.255.0</netmask>
-          <default-gateway>192.168.1.1</default-gateway>
+          <default-gateway>172.31.255.2</default-gateway>
           <dns-setting>
             <servers>
-              <primary>192.168.1.1</primary>
-              <secondary>208.67.222.222</secondary>
+              <primary>208.67.222.22</primary>
+              <secondary>4.2.2.1</secondary>
             </servers>
           </dns-setting>
           <motd-and-banner>
@@ -555,6 +576,76 @@
             <threat-prevention>no</threat-prevention>
             <region>Americas</region>
           </device-telemetry>
+          <route>
+            <service>
+              <entry name="deployments">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="dns">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="ldap">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="netflow">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="panorama">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="radius">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="scep">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="snmp">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="syslog">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="tacplus">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+              <entry name="uid-agent">
+                <source>
+                  <address>10.0.0.14/28</address>
+                  <interface>ethernet1/2</interface>
+                </source>
+              </entry>
+            </service>
+          </route>
         </system>
         <setting>
           <config>
@@ -593,12 +684,9 @@
             <default-security-rules>
               <rules>
                 <entry name="intrazone-default" uuid="3c827a25-71c3-4676-a2cc-adda9f035b0e">
-                  <action>allow</action>
+                  <action>drop</action>
                   <log-start>yes</log-start>
-                  <log-end>yes</log-end>
-                  <tag>
-                    <member>permissive</member>
-                  </tag>
+                  <log-end>no</log-end>
                 </entry>
                 <entry name="interzone-default" uuid="96431bce-f277-4d58-800e-5a82149d545f">
                   <action>deny</action>
@@ -679,10 +767,12 @@
                     <member>outside</member>
                   </from>
                   <source>
+                    <member>fw1 eth1-1</member>
                     <member>ISP1 e0-1</member>
                   </source>
                   <destination>
                     <member>fw1 eth1-1</member>
+                    <member>ISP1 e0-1</member>
                   </destination>
                   <source-user>
                     <member>any</member>
@@ -904,6 +994,15 @@
               <color>color20</color>
             </entry>
           </tag>
+          <user-id-collector>
+            <server-monitor/>
+            <setting>
+              <wmi-account>company\svc_ldap</wmi-account>
+              <wmi-password>-AQ==E3IBJ3pufeRKdFuAd+xxaAuM7Qk=PM8yGuEXJhllaJ1xZ2pFaQ==</wmi-password>
+              <domain-name>company.pri</domain-name>
+              <enable-session>yes</enable-session>
+            </setting>
+          </user-id-collector>
         </entry>
       </vsys>
     </entry>

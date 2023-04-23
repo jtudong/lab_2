@@ -1,7 +1,6 @@
-Current configuration : 2435 bytes
+Current configuration : 2353 bytes
 !
-! Last configuration change at 18:34:08 MST Sat Mar 11 2023
-! NVRAM config last updated at 20:15:18 MST Sat Mar 11 2023 by lab
+! No configuration change since last restart
 !
 version 15.7
 service timestamps debug datetime msec
@@ -163,9 +162,9 @@ line vty 0 4
 ntp server time3.google.com
 ntp server time1.google.com
 ntp server 34.202.215.187
-ntp server pool.ntp.org
 ntp server time2.google.com
 ntp server time4.google.com
+ntp server pool.ntp.org
 !
 end
 
