@@ -1,4 +1,4 @@
-Current configuration : 2353 bytes
+Current configuration : 2364 bytes
 !
 ! No configuration change since last restart
 !
@@ -161,7 +161,7 @@ line vty 0 4
 !
 ntp server time3.google.com
 ntp server time1.google.com
-ntp server 34.202.215.187
+ntp server 34.202.215.187 minpoll 10
 ntp server time2.google.com
 ntp server time4.google.com
 ntp server pool.ntp.org
